@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventManagementSystemAPI", "EventManagementSystemAPI\EventManagementSystemAPI.csproj", "{0E35EBCF-3FEF-41B8-9FB9-44939D85EDDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventManagementSystemAPI", "EventManagementSystemAPI\EventManagementSystemAPI.csproj", "{0E35EBCF-3FEF-41B8-9FB9-44939D85EDDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventMS.Application", "EventMS.Application\EventMS.Application.csproj", "{FA007DA6-D429-4771-B431-8CE89F170AAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventMS.Domain", "EventMS.Domain\EventMS.Domain.csproj", "{BD26B8B6-A64B-461B-BDD7-AEA1947B026F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventMS.Infrastructure", "EventMS.Infrastructure\EventMS.Infrastructure.csproj", "{7BC93E0C-5D93-46A2-A855-E6E58437FC77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{0E35EBCF-3FEF-41B8-9FB9-44939D85EDDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E35EBCF-3FEF-41B8-9FB9-44939D85EDDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E35EBCF-3FEF-41B8-9FB9-44939D85EDDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA007DA6-D429-4771-B431-8CE89F170AAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA007DA6-D429-4771-B431-8CE89F170AAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA007DA6-D429-4771-B431-8CE89F170AAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA007DA6-D429-4771-B431-8CE89F170AAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD26B8B6-A64B-461B-BDD7-AEA1947B026F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD26B8B6-A64B-461B-BDD7-AEA1947B026F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD26B8B6-A64B-461B-BDD7-AEA1947B026F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD26B8B6-A64B-461B-BDD7-AEA1947B026F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BC93E0C-5D93-46A2-A855-E6E58437FC77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BC93E0C-5D93-46A2-A855-E6E58437FC77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BC93E0C-5D93-46A2-A855-E6E58437FC77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BC93E0C-5D93-46A2-A855-E6E58437FC77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
