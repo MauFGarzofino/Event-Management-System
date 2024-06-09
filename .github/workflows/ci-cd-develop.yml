@@ -8,6 +8,13 @@ on:
     branches:
       - develop
 
+env:
+  AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
+  AZURE_WEBAPP_PACKAGE_PATH: ${{ secrets.AZURE_WEBAPP_PACKAGE_PATH }}
+  CONFIGURATION: ${{ secrets.CONFIGURATION }}
+  DOTNET_CORE_VERSION: ${{ secrets.DOTNET_CORE_VERSION }}
+  WORKING_DIRECTORY: ${{ secrets.WORKING_DIRECTORY }}
+
 jobs:
   build:
     runs-on: windows-latest
