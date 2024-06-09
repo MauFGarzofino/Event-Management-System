@@ -11,9 +11,9 @@ on:
 env:
   AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
   AZURE_WEBAPP_PACKAGE_PATH: ${{ secrets.AZURE_WEBAPP_PACKAGE_PATH }}
-  CONFIGURATION: ${{ secrets.CONFIGURATION }}
-  DOTNET_CORE_VERSION: ${{ secrets.DOTNET_CORE_VERSION }}
-  WORKING_DIRECTORY: ${{ secrets.WORKING_DIRECTORY }}
+  CONFIGURATION: 'Release'
+  DOTNET_CORE_VERSION: '8.0.x'
+  WORKING_DIRECTORY: './EventManagementSystemAPI/EventManagementSystemAPI.csproj'
 
 jobs:
   build:
