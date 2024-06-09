@@ -9,7 +9,6 @@ on:
       - master
 
 env:
-  AZURE_WEBAPP_NAME: app-eventmgmtsys-api-eastus-prod-001
   AZURE_WEBAPP_PACKAGE_PATH: EventManagementSystemAPI/publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
@@ -49,6 +48,7 @@ jobs:
   deploy:
     runs-on: windows-latest
     needs: build
+    environment: production
 
     steps:
     - name: Download Artifact from Build Job
