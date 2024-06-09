@@ -1,5 +1,4 @@
 name: CI/CD for Production
-
 on:
   push:
     branches:
@@ -7,56 +6,46 @@ on:
   pull_request:
     branches:
       - master
-
+  
 env:
-  AZURE_WEBAPP_NAME: app-eventmgmtsys-api-eastus-prod-001
-  AZURE_WEBAPP_PACKAGE_PATH: EventManagementSystemAPI/publish
+  AZURE_WEBAPP_NAME: app-eventmgmtsys-api-eastus-dev-001
+  AZURE_WEBAPP_PACKAGE_PATH: EventManagementSystemAPI\publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: ./EventManagementSystemAPI/EventManagementSystemAPI.csproj
-
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-
+    - uses: actions/checkout@v4
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-
-    - name: Restore Dependencies
+    - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
-
-    - name: Build Project
+    - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
-
-    - name: Run Tests
+    - name: Test
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
-
-    - name: Publish Project
+    - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
-
-    - name: Upload Artifact for Deployment
+    - name: Publish Artifacts
       uses: actions/upload-artifact@v3
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
   deploy:
     runs-on: windows-latest
     needs: build
-
     steps:
-    - name: Download Artifact from Build Job
+    - name: Download artifact from build job
       uses: actions/download-artifact@v3
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
+    # deploy to azure 
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
