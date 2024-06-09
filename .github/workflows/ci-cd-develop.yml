@@ -17,6 +17,7 @@ env:
 jobs:
   build:
     runs-on: windows-latest
+    environment: develop
 
     steps:
     - name: Checkout Code
@@ -48,6 +49,7 @@ jobs:
   deploy:
     runs-on: windows-latest
     needs: build
+    environment: develop
 
     steps:
     - name: Download Artifact from Build Job
