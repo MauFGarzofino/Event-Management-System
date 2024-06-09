@@ -9,11 +9,10 @@ on:
       - develop
 
 env:
-  AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
-  AZURE_WEBAPP_PACKAGE_PATH: ${{ secrets.AZURE_WEBAPP_PACKAGE_PATH }}
-  CONFIGURATION: 'Release'
-  DOTNET_CORE_VERSION: '8.0.x'
-  WORKING_DIRECTORY: './EventManagementSystemAPI/EventManagementSystemAPI.csproj'
+  AZURE_WEBAPP_PACKAGE_PATH: EventManagementSystemAPI/publish
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 8.0.x
+  WORKING_DIRECTORY: ./EventManagementSystemAPI/EventManagementSystemAPI.csproj
 
 jobs:
   build:
