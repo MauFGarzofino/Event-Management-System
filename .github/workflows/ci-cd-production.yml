@@ -61,5 +61,5 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE_PROD }}
+        publish-profile: ${{ secrets.APP_EVENTMGMTSYS_API_EASTUS_DEV_001_7F8E }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
