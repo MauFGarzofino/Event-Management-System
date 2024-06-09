@@ -8,13 +8,6 @@ on:
     branches:
       - staging
 
-env:
-  AZURE_WEBAPP_NAME: app-eventms-api-eastus-staging-001
-  AZURE_WEBAPP_PACKAGE_PATH: EventManagementSystemAPI/publish
-  CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: ./EventManagementSystemAPI/EventManagementSystemAPI.csproj
-
 jobs:
   build:
     runs-on: windows-latest
