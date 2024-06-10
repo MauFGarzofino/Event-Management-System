@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EventMS.Domain\EventMS.Domain.csproj" />
+    <ProjectReference Include="..\EventMS.Application\EventMS.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -10,4 +10,8 @@
     <Folder Include="Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EventMS.Domain\EventMS.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
