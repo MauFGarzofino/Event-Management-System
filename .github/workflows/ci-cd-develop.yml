@@ -33,9 +33,6 @@ jobs:
     - name: Build Project
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
 
-    - name: Run Tests
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
-
     - name: Publish Project
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
 
@@ -45,13 +42,27 @@ jobs:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-  deploy:
+  test:
     runs-on: windows-latest
     needs: build
-    environment: develop
 
     steps:
     - name: Download Artifact from Build Job
+      uses: actions/download-artifact@v3
+      with:
+        name: webapp
+        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+    - name: Run Tests
+      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+
+  deploy:
+    runs-on: windows-latest
+    needs: test
+    environment: develop
+
+    steps:
+    - name: Download Artifact from Test Job
       uses: actions/download-artifact@v3
       with:
         name: webapp
