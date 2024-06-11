@@ -19,45 +19,21 @@ namespace EventMS.Infrastructure.Repositories
             _context = context;
         }
 
-        public IEnumerable<Event> GetAllEvents()
-        {
-            return _context.Events.ToList();
-        }
-
-        public Event GetEventById(int id)
-        {
-            return _context.Events.Find(id);
-        }
-
         public void AddEvent(Event newEvent)
         {
             _context.Events.Add(newEvent);
             _context.SaveChanges();
         }
 
-        public void UpdateEvent(Event updatedEvent)
+        public bool EventExists(string title, DateTime date, string location)
         {
-            var local = _context.Set<Event>()
-                .Local
-                .FirstOrDefault(entry => entry.Id.Equals(updatedEvent.Id));
-
-            // check if local is not null 
-            if (local != null)
-            {
-                _context.Entry(local).State = EntityState.Detached;
-            }
-            _context.Entry(updatedEvent).State = EntityState.Modified;
-            _context.SaveChanges();
+            return _context.Events.Any(e => e.Title == title && e.Date == date && e.Location == location);
         }
 
-        public void DeleteEvent(int id)
-        {
-            var eventToDelete = _context.Events.Find(id);
-            if (eventToDelete != null)
-            {
-                _context.Events.Remove(eventToDelete);
-                _context.SaveChanges();
-            }
-        }
+        // Other methods with NotImplementedException
+        public IEnumerable<Event> GetAllEvents() => throw new NotImplementedException();
+        public Event GetEventById(int id) => throw new NotImplementedException();
+        public void UpdateEvent(Event updatedEvent) => throw new NotImplementedException();
+        public void DeleteEvent(int id) => throw new NotImplementedException();
     }
 }
