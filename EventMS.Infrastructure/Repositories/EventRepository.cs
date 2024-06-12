@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,5 +60,17 @@ namespace EventMS.Infrastructure.Repositories
                 _context.SaveChanges();
             }
         }
+        public void AddTicket(Ticket newTicket)
+        {
+            var eventExists = _context.Events.Any(e => e.Id == newTicket.EventId);
+            if (!eventExists)
+            {
+                throw new Exception("Event not found");
+            }
+
+            _context.Tickets.Add(newTicket);
+            _context.SaveChanges();
+        }
+
     }
 }

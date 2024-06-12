@@ -1,6 +1,7 @@
 ﻿using EventMS.Domain.Entities;
 using EventMS.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Sockets;
 
 namespace EventManagementSystemAPI.Controllers
 {
@@ -69,5 +70,42 @@ namespace EventManagementSystemAPI.Controllers
             _eventRepository.DeleteEvent(id);
             return NoContent();
         }
+
+        [HttpPost("{eventId}/tickets")]
+        public IActionResult CreateTicket(int eventId, [FromBody] Ticket newTicket)
+        {
+            if (newTicket == null)
+            {
+                return BadRequest("Ticket data is null.");
+            }
+
+            if (eventId != newTicket.EventId)
+            {
+                return BadRequest("Event ID mismatch.");
+            }
+
+            try
+            {
+                _eventRepository.AddTicket(newTicket);
+                return CreatedAtAction(nameof(GetTicketById), new { eventId = eventId, id = newTicket.Id }, newTicket);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{eventId}/tickets/{id}")]
+        public IActionResult GetTicketById(int eventId, int id)
+        {
+            var ticket = _eventRepository.GetTicketById(eventId, id);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+            return Ok(ticket);
+        }
     }
+
+}
 }

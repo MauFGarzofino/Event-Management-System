@@ -14,5 +14,8 @@ namespace EventMS.Domain.Interfaces
         void AddEvent(Event newEvent);
         void UpdateEvent(Event updatedEvent);
         void DeleteEvent(int id);
+
+        void AddTicket(Ticket newTicket);
+        object GetTicketById(int eventId, int id);
     }
 }
