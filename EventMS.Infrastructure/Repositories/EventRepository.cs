@@ -24,15 +24,40 @@ namespace EventMS.Infrastructure.Repositories
             return _context.Events.ToList();
         }
 
+        public Event GetEventById(int id)
+        {
+            return _context.Events.Find(id);
+        }
+
         public void AddEvent(Event newEvent)
         {
             _context.Events.Add(newEvent);
             _context.SaveChanges();
         }
 
-        //methods to be implemented
-        public Event GetEventById(int id) => throw new NotImplementedException();
-        public void UpdateEvent(Event updatedEvent) => throw new NotImplementedException();
-        public void DeleteEvent(int id) => throw new NotImplementedException();
+        public void UpdateEvent(Event updatedEvent)
+        {
+            var local = _context.Set<Event>()
+                .Local
+                .FirstOrDefault(entry => entry.Id.Equals(updatedEvent.Id));
+
+            // check if local is not null 
+            if (local != null)
+            {
+                _context.Entry(local).State = EntityState.Detached;
+            }
+            _context.Entry(updatedEvent).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public void DeleteEvent(int id)
+        {
+            var eventToDelete = _context.Events.Find(id);
+            if (eventToDelete != null)
+            {
+                _context.Events.Remove(eventToDelete);
+                _context.SaveChanges();
+            }
+        }
     }
 }
