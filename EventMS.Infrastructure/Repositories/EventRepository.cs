@@ -59,5 +59,6 @@ namespace EventMS.Infrastructure.Repositories
                 _context.SaveChanges();
             }
         }
+
     }
 }

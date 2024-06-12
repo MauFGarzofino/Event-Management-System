@@ -2,6 +2,8 @@
 using EventMS.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
+using System.Collections.Generic;
+
 namespace EventManagementSystemAPI.Controllers
 {
     [ApiController]
@@ -63,11 +65,11 @@ namespace EventManagementSystemAPI.Controllers
             var eventToDelete = _eventRepository.GetEventById(id);
             if (eventToDelete == null)
             {
-                return NotFound();
+                return NotFound(new { message = "Event not found" });
             }
 
             _eventRepository.DeleteEvent(id);
-            return NoContent();
+            return Ok(new { message = "Event deleted successfully" });
         }
     }
 }

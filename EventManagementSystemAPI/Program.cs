@@ -5,6 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load configuration from secret.json
+builder.Configuration.AddJsonFile("secret.json", optional: true, reloadOnChange: true);
+
+
 // Add services to the container.
 
 builder.Services.AddControllers();
