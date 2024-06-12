@@ -1,5 +1,6 @@
-﻿using EventMS.Domain.Entities;
-using EventMS.Domain.Interfaces;
+﻿using EventManagementSystemAPI.Models;
+using EventMS.Application.Port;
+using EventMS.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManagementSystemAPI.Controllers
@@ -8,33 +9,43 @@ namespace EventManagementSystemAPI.Controllers
     [Route("[controller]")]
     public class EventController : ControllerBase
     {
-        private readonly IEventRepository _eventRepository;
+        private readonly ICreateEventUseCase _createEventUseCase;
 
-        public EventController(IEventRepository eventRepository)
+        public EventController(ICreateEventUseCase createEventUseCase)
         {
-            _eventRepository = eventRepository;
+            _createEventUseCase = createEventUseCase;
         }
 
         [HttpPost]
-        public ActionResult<Event> Post([FromBody] Event newEvent)
+        public IActionResult Post([FromBody] EventDto newEventDto)
         {
-            if (newEvent == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Event data is required.");
+                return BadRequest(ModelState);
             }
 
-            if (string.IsNullOrWhiteSpace(newEvent.Title) || newEvent.Date == default || newEvent.Time == default || string.IsNullOrWhiteSpace(newEvent.Location))
+            var newEvent = new Event
             {
-                return BadRequest("Missing mandatory fields: title, date, time, location.");
-            }
+                Title = newEventDto.Title,
+                Description = newEventDto.Description,
+                Date = newEventDto.Date,
+                Time = newEventDto.Time,
+                Location = newEventDto.Location
+            };
 
-            if (_eventRepository.EventExists(newEvent.Title, newEvent.Date, newEvent.Location))
+            try
             {
-                return Conflict("An event with the same title, date, and location already exists.");
+                _createEventUseCase.Execute(newEvent);
+                return CreatedAtAction(nameof(Post), new { id = newEvent.Id }, newEvent);
             }
-
-            _eventRepository.AddEvent(newEvent);
-            return CreatedAtAction(nameof(Post), new { id = newEvent.Id }, newEvent);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
     }
 }

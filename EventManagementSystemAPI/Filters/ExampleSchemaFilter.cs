@@ -1,20 +1,15 @@
-﻿using EventMS.Domain.Entities;
+﻿using EventManagementSystemAPI.Models;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EventMS.Infrastructure.Filters
+namespace EventManagementSystemAPI.Filters
 {
     public class ExampleSchemaFilter : ISchemaFilter
     {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
-            if (context.Type == typeof(Event))
+            if (context.Type == typeof(EventDto))
             {
                 schema.Example = new OpenApiObject()
                 {

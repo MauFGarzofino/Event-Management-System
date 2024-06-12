@@ -29,11 +29,5 @@ namespace EventMS.Infrastructure.Repositories
         {
             return _context.Events.Any(e => e.Title == title && e.Date == date && e.Location == location);
         }
-
-        // Other methods with NotImplementedException
-        public IEnumerable<Event> GetAllEvents() => throw new NotImplementedException();
-        public Event GetEventById(int id) => throw new NotImplementedException();
-        public void UpdateEvent(Event updatedEvent) => throw new NotImplementedException();
-        public void DeleteEvent(int id) => throw new NotImplementedException();
     }
 }
