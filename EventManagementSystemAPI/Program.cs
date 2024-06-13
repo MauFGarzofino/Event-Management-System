@@ -1,4 +1,6 @@
+using AutoMapper;
 using EventManagementSystemAPI.Filters;
+using EventManagementSystemAPI.MappingProfile;
 using EventManagementSystemAPI.Util;
 using EventMS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +24,15 @@ builder.Services.AddSwaggerGen(c =>
     c.SchemaFilter<ExampleSchemaFilter>();
     c.EnableAnnotations();
 });
+
+//mapper 
+var mapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile(new MappingProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();
 

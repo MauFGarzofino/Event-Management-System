@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EventManagementSystemAPI.Models
+namespace EventMS.Application.DTOs
 {
     public class EventDto
     {

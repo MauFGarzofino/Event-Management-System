@@ -1,4 +1,4 @@
-﻿using EventManagementSystemAPI.Models;
+﻿using EventMS.Application.DTOs;
 using EventMS.Application.Port;
 using EventMS.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -24,19 +24,10 @@ namespace EventManagementSystemAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var newEvent = new Event
-            {
-                Title = newEventDto.Title,
-                Description = newEventDto.Description,
-                Date = newEventDto.Date,
-                Time = newEventDto.Time,
-                Location = newEventDto.Location
-            };
-
             try
             {
-                _createEventUseCase.Execute(newEvent);
-                return CreatedAtAction(nameof(Post), new { id = newEvent.Id }, newEvent);
+                var createdEvent = _createEventUseCase.Execute(newEventDto);
+                return CreatedAtAction(nameof(Post), new { id = createdEvent.Id }, createdEvent);
             }
             catch (ArgumentException ex)
             {

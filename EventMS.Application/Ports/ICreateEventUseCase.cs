@@ -1,4 +1,5 @@
-﻿using EventMS.Domain.Entities;
+﻿using EventMS.Application.DTOs;
+using EventMS.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace EventMS.Application.Port
 {
     public interface ICreateEventUseCase
     {
-        void Execute(Event newEvent);
+        Event Execute(EventDto eventDto);
     }
 }
