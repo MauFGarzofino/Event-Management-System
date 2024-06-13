@@ -1,24 +1,38 @@
-using EventMS.Domain.Interfaces;
+using AutoMapper;
+using EventManagementSystemAPI.Filters;
+using EventManagementSystemAPI.MappingProfile;
+using EventManagementSystemAPI.Util;
 using EventMS.Infrastructure.Data;
-using EventMS.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 // Configure DbContext with SQL Server
 var sqlConnection = builder.Configuration["ConnectionStrings:EMS:SqlDb"];
 
 builder.Services.AddSqlServer<ApplicationDbContext>(sqlConnection, options => options.EnableRetryOnFailure());
 
-// Register repositories
-builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddRepositories();
+builder.Services.AddUseCases();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SchemaFilter<ExampleSchemaFilter>();
+    c.EnableAnnotations();
+});
+
+//mapper 
+var mapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile(new MappingProfile());
+});
+
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();
 

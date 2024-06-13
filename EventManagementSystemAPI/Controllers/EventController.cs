@@ -1,5 +1,6 @@
-﻿using EventMS.Domain.Entities;
-using EventMS.Domain.Interfaces;
+﻿using EventMS.Application.DTOs;
+using EventMS.Application.Port;
+using EventMS.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManagementSystemAPI.Controllers
@@ -8,66 +9,34 @@ namespace EventManagementSystemAPI.Controllers
     [Route("[controller]")]
     public class EventController : ControllerBase
     {
-        private readonly IEventRepository _eventRepository;
+        private readonly ICreateEventUseCase _createEventUseCase;
 
-        public EventController(IEventRepository eventRepository)
+        public EventController(ICreateEventUseCase createEventUseCase)
         {
-            _eventRepository = eventRepository;
-        }
-
-        [HttpGet]
-        public IEnumerable<Event> Get()
-        {
-            return _eventRepository.GetAllEvents();
-        }
-
-        [HttpGet("{id}")]
-        public ActionResult<Event> Get(int id)
-        {
-            var eventItem = _eventRepository.GetEventById(id);
-            if (eventItem == null)
-            {
-                return NotFound();
-            }
-            return eventItem;
+            _createEventUseCase = createEventUseCase;
         }
 
         [HttpPost]
-        public ActionResult<Event> Post([FromBody] Event newEvent)
+        public IActionResult Post([FromBody] EventDto newEventDto)
         {
-            _eventRepository.AddEvent(newEvent);
-            return CreatedAtAction(nameof(Get), new { id = newEvent.Id }, newEvent);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Event updatedEvent)
-        {
-            if (id != updatedEvent.Id)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
-            var eventToUpdate = _eventRepository.GetEventById(id);
-            if (eventToUpdate == null)
+            try
             {
-                return NotFound();
+                var createdEvent = _createEventUseCase.Execute(newEventDto);
+                return CreatedAtAction(nameof(Post), new { id = createdEvent.Id }, createdEvent);
             }
-
-            _eventRepository.UpdateEvent(updatedEvent);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var eventToDelete = _eventRepository.GetEventById(id);
-            if (eventToDelete == null)
+            catch (ArgumentException ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
-
-            _eventRepository.DeleteEvent(id);
-            return NoContent();
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
     }
 }
