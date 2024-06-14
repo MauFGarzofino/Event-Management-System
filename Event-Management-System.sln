@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventMS.Domain", "EventMS.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventMS.Infrastructure", "EventMS.Infrastructure\EventMS.Infrastructure.csproj", "{7BC93E0C-5D93-46A2-A855-E6E58437FC77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventManagementSystemAPITests", "EventManagementSystemAPITests\EventManagementSystemAPITests.csproj", "{CA25106B-A541-481F-B1D6-212C4B040350}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventManagementSystemAPI.Tests", "EventManagementSystemAPITests\EventManagementSystemAPI.Tests.csproj", "{CA25106B-A541-481F-B1D6-212C4B040350}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

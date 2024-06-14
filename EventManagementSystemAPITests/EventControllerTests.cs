@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace EventManagementSystemAPITests
+namespace EventManagementSystemAPI.Tests
 {
     public class EventControllerTests
     {
