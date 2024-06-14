@@ -10,6 +10,8 @@ namespace EventManagementSystemAPI.MappingProfile
         {
             // create the profiles
             CreateMap<EventDto, Event>();
+            CreateMap<UpdateEventDto, Event>();
+
         }
     }
 }

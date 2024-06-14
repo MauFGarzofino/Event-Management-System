@@ -1,4 +1,5 @@
 ﻿using EventMS.Application.Port;
+using EventMS.Application.Ports;
 using EventMS.Application.UseCases;
 using EventMS.Domain.Interfaces;
 using EventMS.Infrastructure.Repositories;
@@ -15,6 +16,8 @@ namespace EventManagementSystemAPI.Util
         public static void AddUseCases(this IServiceCollection services)
         {
             services.AddScoped<ICreateEventUseCase, CreateEventUseCase>();
+            services.AddScoped<IUpdateEventUseCase, UpdateEventUseCase>();
         }
+
     }
 }

@@ -10,6 +10,8 @@ namespace EventMS.Domain.Interfaces
     public interface IEventRepository
     {
         void AddEvent(Event newEvent);
+        void UpdateEvent(Event newEvent);
         bool EventExists(string title, DateTime date, string location);
+        Event GetEventById(int id);
     }
 }
