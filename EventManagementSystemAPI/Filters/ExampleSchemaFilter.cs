@@ -20,6 +20,18 @@ namespace EventManagementSystemAPI.Filters
                     ["location"] = new OpenApiString("City Library, Main Hall")
                 };
             }
+            if (context.Type == typeof(UpdateEventDto))
+            {
+                schema.Example = new OpenApiObject()
+                {
+                    ["id"] = new OpenApiString("5"),
+                    ["title"] = new OpenApiString("Tech Conference 2024"),
+                    ["description"] = new OpenApiString("Join us for a day of insightful talks and networking with industry leaders."),
+                    ["date"] = new OpenApiString("2024-07-11"),
+                    ["time"] = new OpenApiString("09:00:00"),
+                    ["location"] = new OpenApiString("Convention Center, Hall A")
+                };
+            }
         }
     }
 }
