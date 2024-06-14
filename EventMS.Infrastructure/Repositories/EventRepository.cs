@@ -29,10 +29,10 @@ namespace EventMS.Infrastructure.Repositories
             _context.Events.Add(newEvent);
             _context.SaveChanges();
         }
-        
-        //methods to be implemented
-        public Event GetEventById(int id) => throw new NotImplementedException();
-        public void UpdateEvent(Event updatedEvent) => throw new NotImplementedException();
-        public void DeleteEvent(int id) => throw new NotImplementedException();
+
+        public bool EventExists(string title, DateTime date, string location)
+        {
+            return _context.Events.Any(e => e.Title == title && e.Date == date && e.Location == location);
+        }
     }
 }

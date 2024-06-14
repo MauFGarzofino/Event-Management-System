@@ -1,4 +1,6 @@
-﻿using EventMS.Domain.Entities;
+﻿using EventMS.Application.DTOs;
+using EventMS.Application.Port;
+using EventMS.Domain.Entities;
 using EventMS.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +11,12 @@ namespace EventManagementSystemAPI.Controllers
     public class EventController : ControllerBase
     {
         private readonly IEventRepository _eventRepository;
+        private readonly ICreateEventUseCase _createEventUseCase;
 
-        public EventController(IEventRepository eventRepository)
+        public EventController(IEventRepository eventRepository, ICreateEventUseCase createEventUseCase)
         {
             _eventRepository = eventRepository;
+            _createEventUseCase = createEventUseCase;
         }
 
         [HttpGet]
@@ -28,10 +32,26 @@ namespace EventManagementSystemAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Event> Post([FromBody] Event newEvent)
+        public IActionResult Post([FromBody] EventDto newEventDto)
         {
-            _eventRepository.AddEvent(newEvent);
-            return CreatedAtAction(nameof(Get), new { id = newEvent.Id }, newEvent);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var createdEvent = _createEventUseCase.Execute(newEventDto);
+                return CreatedAtAction(nameof(Post), new { id = createdEvent.Id }, createdEvent);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
     }
 }
