@@ -13,10 +13,6 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: ./EventManagementSystemAPI/EventManagementSystemAPI.csproj
-  WORKING_DIRECTORY_API_TESTS: ./EventManagementSystemAPI.Tests/EventManagementSystemAPI.Tests.csproj
-  WORKING_DIRECTORY_APPLICATION_TESTS: ./EventMS.Application.Tests/EventMS.Application.Tests.csproj
-  WORKING_DIRECTORY_DOMAIN_TESTS: ./EventMS.Domain.Tests/EventMS.Domain.Tests.csproj
-  WORKING_DIRECTORY_INFRASTRUCTURE_TESTS: ./EventMS.Infrastructure.Tests/EventMS.Infrastructure.Tests.csproj
 
 jobs:
   build:
@@ -65,17 +61,17 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
-    - name: Run Tests for API
-      run: dotnet test "${{ env.WORKING_DIRECTORY_API_TESTS }}" --no-build --configuration ${{ env.CONFIGURATION }}
+    - name: Run Tests for EventManagementSystemAPI
+      run: dotnet test ./EventManagementSystemAPI.Tests/EventManagementSystemAPI.Tests.csproj --no-build --configuration ${{ env.CONFIGURATION }}
 
-    - name: Run Tests for Application
-      run: dotnet test "${{ env.WORKING_DIRECTORY_APPLICATION_TESTS }}" --no-build --configuration ${{ env.CONFIGURATION }}
+    - name: Run Tests for Application Layer
+      run: dotnet test ./EventMS.Application.Tests/EventMS.Application.Tests.csproj --no-build --configuration ${{ env.CONFIGURATION }}
 
-    - name: Run Tests for Domain
-      run: dotnet test "${{ env.WORKING_DIRECTORY_DOMAIN_TESTS }}" --no-build --configuration ${{ env.CONFIGURATION }}
+    - name: Run Tests for Domain Layer
+      run: dotnet test ./EventMS.Domain.Tests/EventMS.Domain.Tests.csproj --no-build --configuration ${{ env.CONFIGURATION }}
 
-    - name: Run Tests for Infrastructure
-      run: dotnet test "${{ env.WORKING_DIRECTORY_INFRASTRUCTURE_TESTS }}" --no-build --configuration ${{ env.CONFIGURATION }}
+    - name: Run Tests for Infrastructure Layer
+      run: dotnet test ./EventMS.Infrastructure.Tests/EventMS.Infrastructure.Tests.csproj --no-build --configuration ${{ env.CONFIGURATION }}
 
   deploy:
     runs-on: windows-latest
