@@ -13,7 +13,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: ./EventManagementSystemAPI/EventManagementSystemAPI.csproj
-  WORKING_DIRECTORY_API_TESTS: ./EventMS.API.Tests/EventMS.API.Tests.csproj
+  WORKING_DIRECTORY_API_TESTS: ./EventManagementSystemAPI.Tests/EventManagementSystemAPI.Tests.csproj
   WORKING_DIRECTORY_APPLICATION_TESTS: ./EventMS.Application.Tests/EventMS.Application.Tests.csproj
   WORKING_DIRECTORY_DOMAIN_TESTS: ./EventMS.Domain.Tests/EventMS.Domain.Tests.csproj
   WORKING_DIRECTORY_INFRASTRUCTURE_TESTS: ./EventMS.Infrastructure.Tests/EventMS.Infrastructure.Tests.csproj
