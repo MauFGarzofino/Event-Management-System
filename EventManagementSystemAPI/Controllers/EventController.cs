@@ -7,11 +7,12 @@ using EventMS.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Update;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventManagementSystemAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("events")]
     public class EventController : ControllerBase
     {
         private readonly ICreateEventUseCase _createEventUseCase;
@@ -54,10 +55,7 @@ namespace EventManagementSystemAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id  != updatedEventDto.Id)
-            {
-                return BadRequest(ModelState);
-            }
+            updatedEventDto.Id = id;
 
             try
             {
@@ -71,6 +69,10 @@ namespace EventManagementSystemAPI.Controllers
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
             }
         }
 

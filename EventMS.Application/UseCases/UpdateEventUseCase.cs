@@ -35,6 +35,11 @@ namespace EventMS.Application.UseCases
                 throw new ArgumentException("The event to be updated was not found.");
             }
 
+            if (_eventRepository.EventExists(updateEvent.Title, updateEvent.Date, updateEvent.Location))
+            {
+                throw new InvalidOperationException("An event with the same title, date, and location already exists.");
+            }
+
             _eventRepository.UpdateEvent(updateEvent);
             return updateEvent;
         }
