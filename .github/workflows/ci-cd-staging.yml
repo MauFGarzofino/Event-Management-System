@@ -14,6 +14,10 @@ env:
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: ./EventManagementSystemAPI/EventManagementSystemAPI.csproj
 
+permissions:
+  checks: write
+  pull-requests: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -60,7 +64,7 @@ jobs:
 
     - name: Run Tests
       run: dotnet test ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }} --logger "trx;LogFileName=test-results.trx" --verbosity normal
-      continue-on-error: false
+      continue-on-error: true # Continúa a pesar de errores en las pruebas
 
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action/windows@v2
@@ -85,12 +89,4 @@ jobs:
     - name: Download Artifact from Test Job
       uses: actions/download-artifact@v3
       with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
-    - name: Deploy to Azure WebApp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE_STAGING }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        name:

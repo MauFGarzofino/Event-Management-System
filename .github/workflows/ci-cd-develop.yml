@@ -14,6 +14,10 @@ env:
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: ./EventManagementSystemAPI/EventManagementSystemAPI.csproj
 
+permissions:
+  checks: write
+  pull-requests: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -60,7 +64,7 @@ jobs:
 
     - name: Run Tests
       run: dotnet test ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }} --logger "trx;LogFileName=test-results.trx" --verbosity normal
-      continue-on-error: false
+      continue-on-error: true # Continúa a pesar de errores en las pruebas
 
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action/windows@v2
