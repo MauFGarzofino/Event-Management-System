@@ -50,13 +50,19 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
+    - name: Download Artifact from Build Job
+      uses: actions/download-artifact@v3
+      with:
+        name: webapp
+        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
     - name: Run Tests
-      run: dotnet test --no-build --configuration ${{ env.CONFIGURATION }}
+      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
 
   deploy:
     runs-on: windows-latest
