@@ -31,7 +31,7 @@ jobs:
       run: dotnet restore ./Event-Management-System.sln
 
     - name: Build Project
-      run: dotnet build ./Event-Management-System.sln --no-restore
+      run: dotnet build ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }} --no-restore
 
     - name: Publish Project
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
@@ -56,7 +56,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
     - name: Run Tests
-      run: dotnet test ./Event-Management-System.sln --no-build --configuration ${{ env.CONFIGURATION }} --verbosity normal
+      run: dotnet test ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
 
   deploy:
     runs-on: windows-latest
