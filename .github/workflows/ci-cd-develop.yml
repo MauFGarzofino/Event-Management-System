@@ -34,7 +34,7 @@ jobs:
       run: dotnet build ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }} --no-restore
 
     - name: Publish API Project
-      run: dotnet publish ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+      run: dotnet publish ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
     - name: Upload Artifact for Deployment
       uses: actions/upload-artifact@v3
@@ -55,10 +55,12 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
+    - name: Build Tests
+      run: dotnet build ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }}
+
     - name: Run Tests
       run: |
-        dotnet test ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
-      continue-on-error: true
+        dotnet test ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }} --verbosity normal
 
     - name: List Files in Test Directories
       run: |
