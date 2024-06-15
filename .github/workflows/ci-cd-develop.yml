@@ -28,10 +28,10 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
     - name: Restore Dependencies
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+      run: dotnet restore
 
     - name: Build Project
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
 
     - name: Publish Project
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
@@ -50,19 +50,13 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Download Artifact from Build Job
-      uses: actions/download-artifact@v3
-      with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
     - name: Run Tests
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+      run: dotnet test --no-build --configuration ${{ env.CONFIGURATION }}
 
   deploy:
     runs-on: windows-latest
@@ -82,4 +76,3 @@ jobs:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.APP_EVENTMGMTSYS_API_EASTUS_DEV_001_7F8E }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
