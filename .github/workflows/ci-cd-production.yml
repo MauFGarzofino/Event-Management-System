@@ -61,8 +61,17 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
-    - name: Run Tests
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+    - name: Run Tests for EventManagementSystemAPI
+      run: dotnet test ./Tests/EventManagementSystemAPI.Tests/EventManagementSystemAPI.Tests.csproj --no-build --configuration ${{ env.CONFIGURATION }}
+
+    - name: Run Tests for Application
+      run: dotnet test ./Tests/EventMS.Application.Tests/EventMS.Application.Tests.csproj --no-build --configuration ${{ env.CONFIGURATION }}
+
+    - name: Run Tests for Domain
+      run: dotnet test ./Tests/EventMS.Domain.Tests/EventMS.Domain.Tests.csproj --no-build --configuration ${{ env.CONFIGURATION }}
+
+    - name: Run Tests for Infrastructure
+      run: dotnet test ./Tests/EventMS.Infrastructure.Tests/EventMS.Infrastructure.Tests.csproj --no-build --configuration ${{ env.CONFIGURATION }}
 
   deploy:
     runs-on: windows-latest
