@@ -56,7 +56,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
     - name: Run Tests
-      run: dotnet test ./EventMS.Domain.Tests/EventMS.Domain.Tests.csproj --no-buil --verbosity normal   d
+      run: dotnet test ./EventMS.Domain.Tests/EventMS.Domain.Tests.csproj --no-build --verbosity normal
 
   deploy:
     runs-on: windows-latest
