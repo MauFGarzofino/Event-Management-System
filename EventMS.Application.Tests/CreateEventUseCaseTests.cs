@@ -62,7 +62,7 @@ namespace EventMS.Application.Tests
         {
             var newEventDto = new EventDto
             {
-                Title = "New Event",
+                Title = "",
                 Date = new DateTime(2024, 8, 15),
                 Time = new TimeSpan(11, 0, 0),
                 Location = "City Library"
