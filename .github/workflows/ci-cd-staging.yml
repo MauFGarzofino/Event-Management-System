@@ -59,8 +59,14 @@ jobs:
       run: dotnet build ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }}
 
     - name: Run Tests
-      run: dotnet test ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }} --verbosity normal
-      continue-on-error: false 
+      run: dotnet test ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }} --logger "trx;LogFileName=test-results.trx" --verbosity normal
+      continue-on-error: false
+
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        files: '**/test-results.trx'
 
     - name: List Files in Test Directories
       run: |
