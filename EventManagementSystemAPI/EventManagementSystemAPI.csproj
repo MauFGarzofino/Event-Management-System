@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EventMS.Application\EventMS.Application.csproj" />
+    <ProjectReference Include="..\EventMS.Domain\EventMS.Domain.csproj" />
     <ProjectReference Include="..\EventMS.Infrastructure\EventMS.Infrastructure.csproj" />
   </ItemGroup>
 

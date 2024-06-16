@@ -5,11 +5,19 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventManagementSystemAPI", "EventManagementSystemAPI\EventManagementSystemAPI.csproj", "{0E35EBCF-3FEF-41B8-9FB9-44939D85EDDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventMS.Application", "EventMS.Application\EventMS.Application.csproj", "{FA007DA6-D429-4771-B431-8CE89F170AAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventMS.Application", "EventMS.Application\EventMS.Application.csproj", "{FA007DA6-D429-4771-B431-8CE89F170AAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventMS.Domain", "EventMS.Domain\EventMS.Domain.csproj", "{BD26B8B6-A64B-461B-BDD7-AEA1947B026F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventMS.Domain", "EventMS.Domain\EventMS.Domain.csproj", "{BD26B8B6-A64B-461B-BDD7-AEA1947B026F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventMS.Infrastructure", "EventMS.Infrastructure\EventMS.Infrastructure.csproj", "{7BC93E0C-5D93-46A2-A855-E6E58437FC77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventMS.Infrastructure", "EventMS.Infrastructure\EventMS.Infrastructure.csproj", "{7BC93E0C-5D93-46A2-A855-E6E58437FC77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventManagementSystemAPI.Tests", "EventManagementSystemAPI.Tests\EventManagementSystemAPI.Tests.csproj", "{62BA36F5-B1CD-4FC6-8417-92F9EDD0C4DB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventMS.Application.Tests", "EventMS.Application.Tests\EventMS.Application.Tests.csproj", "{FCDCA8FB-D8EE-4327-8614-483790F2AA34}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventMS.Domain.Tests", "EventMS.Domain.Tests\EventMS.Domain.Tests.csproj", "{58ADF84D-5B29-48F7-9618-4146C5F8AB27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventMS.Infrastructure.Tests", "EventMS.Infrastructure.Tests\EventMS.Infrastructure.Tests.csproj", "{98583D5C-1884-4C5A-B26C-C06369D4D868}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +41,22 @@ Global
 		{7BC93E0C-5D93-46A2-A855-E6E58437FC77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BC93E0C-5D93-46A2-A855-E6E58437FC77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BC93E0C-5D93-46A2-A855-E6E58437FC77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62BA36F5-B1CD-4FC6-8417-92F9EDD0C4DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62BA36F5-B1CD-4FC6-8417-92F9EDD0C4DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62BA36F5-B1CD-4FC6-8417-92F9EDD0C4DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62BA36F5-B1CD-4FC6-8417-92F9EDD0C4DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCDCA8FB-D8EE-4327-8614-483790F2AA34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCDCA8FB-D8EE-4327-8614-483790F2AA34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCDCA8FB-D8EE-4327-8614-483790F2AA34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCDCA8FB-D8EE-4327-8614-483790F2AA34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58ADF84D-5B29-48F7-9618-4146C5F8AB27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58ADF84D-5B29-48F7-9618-4146C5F8AB27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58ADF84D-5B29-48F7-9618-4146C5F8AB27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58ADF84D-5B29-48F7-9618-4146C5F8AB27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98583D5C-1884-4C5A-B26C-C06369D4D868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98583D5C-1884-4C5A-B26C-C06369D4D868}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98583D5C-1884-4C5A-B26C-C06369D4D868}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98583D5C-1884-4C5A-B26C-C06369D4D868}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

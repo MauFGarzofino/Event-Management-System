@@ -14,6 +14,10 @@ env:
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: ./EventManagementSystemAPI/EventManagementSystemAPI.csproj
 
+permissions:
+  checks: write
+  pull-requests: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -28,13 +32,13 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
     - name: Restore Dependencies
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+      run: dotnet restore ./Event-Management-System.sln
 
-    - name: Build Project
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+    - name: Build Solution
+      run: dotnet build ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }} --no-restore
 
-    - name: Publish Project
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+    - name: Publish API Project
+      run: dotnet publish ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
     - name: Upload Artifact for Deployment
       uses: actions/upload-artifact@v3
@@ -50,19 +54,31 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Download Artifact from Build Job
-      uses: actions/download-artifact@v3
-      with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
+    - name: Build Tests
+      run: dotnet build ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }}
+
     - name: Run Tests
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+      run: dotnet test ./Event-Management-System.sln --configuration ${{ env.CONFIGURATION }} --logger "trx;LogFileName=test-results.trx" --verbosity normal
+      continue-on-error: true # Continúa a pesar de errores en las pruebas
+
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action/windows@v2
+      if: always()
+      with:
+        files: '**/test-results.trx'
+
+    - name: List Files in Test Directories
+      run: |
+        echo "Listing files in test directories:"
+        ls -R ./EventManagementSystemAPI.Tests/bin/Release/net8.0
+        ls -R ./EventMS.Application.Tests/bin/Release/net8.0
+        ls -R ./EventMS.Infrastructure.Tests/bin/Release/net8.0
+        ls -R ./EventMS.Domain.Tests/bin/Release/net8.0
 
   deploy:
     runs-on: windows-latest
@@ -79,7 +95,6 @@ jobs:
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.APP_EVENTMGMTSYS_API_EASTUS_DEV_001_7F8E }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-

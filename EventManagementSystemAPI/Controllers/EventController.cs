@@ -1,73 +1,80 @@
-﻿using EventMS.Domain.Entities;
+﻿using EventMS.Application.DTOs;
+using EventMS.Application.Port;
+using EventMS.Application.Ports;
+using EventMS.Application.UseCases;
+using EventMS.Domain.Entities;
 using EventMS.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Update;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventManagementSystemAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("events")]
     public class EventController : ControllerBase
     {
-        private readonly IEventRepository _eventRepository;
+        private readonly ICreateEventUseCase _createEventUseCase;
+        private readonly IUpdateEventUseCase _updateEventUseCase;
 
-        public EventController(IEventRepository eventRepository)
+        public EventController(ICreateEventUseCase createEventUseCase, IUpdateEventUseCase updateEventUseCase)
         {
-            _eventRepository = eventRepository;
-        }
-
-        [HttpGet]
-        public IEnumerable<Event> Get()
-        {
-            return _eventRepository.GetAllEvents();
-        }
-
-        [HttpGet("{id}")]
-        public ActionResult<Event> Get(int id)
-        {
-            var eventItem = _eventRepository.GetEventById(id);
-            if (eventItem == null)
-            {
-                return NotFound();
-            }
-            return eventItem;
+            _createEventUseCase = createEventUseCase;
+            _updateEventUseCase = updateEventUseCase;
         }
 
         [HttpPost]
-        public ActionResult<Event> Post([FromBody] Event newEvent)
+        public IActionResult Post([FromBody] EventDto newEventDto)
         {
-            _eventRepository.AddEvent(newEvent);
-            return CreatedAtAction(nameof(Get), new { id = newEvent.Id }, newEvent);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var createdEvent = _createEventUseCase.Execute(newEventDto);
+                return CreatedAtAction(nameof(Post), new { id = createdEvent.Id }, createdEvent);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Event updatedEvent)
+        public IActionResult Put(int id, [FromBody] UpdateEventDto updatedEventDto)
         {
-            if (id != updatedEvent.Id)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
-            var eventToUpdate = _eventRepository.GetEventById(id);
-            if (eventToUpdate == null)
-            {
-                return NotFound();
-            }
+            updatedEventDto.Id = id;
 
-            _eventRepository.UpdateEvent(updatedEvent);
-            return NoContent();
+            try
+            {
+                var updatedEvent = _updateEventUseCase.Execute(updatedEventDto);
+                return Ok(updatedEvent);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var eventToDelete = _eventRepository.GetEventById(id);
-            if (eventToDelete == null)
-            {
-                return NotFound();
-            }
-
-            _eventRepository.DeleteEvent(id);
-            return NoContent();
-        }
     }
 }
