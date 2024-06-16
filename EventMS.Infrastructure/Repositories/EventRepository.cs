@@ -25,6 +25,25 @@ namespace EventMS.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
+        public void UpdateEvent(Event updatedEvent)
+        {
+            var local = _context.Set<Event>()
+                .Local
+                .FirstOrDefault(entry => entry.Id.Equals(updatedEvent.Id));
+
+            // check if local is not null 
+            if (local != null)
+            {
+                _context.Entry(local).State = EntityState.Detached;
+            }
+            _context.Entry(updatedEvent).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+        public Event GetEventById(int id)
+        {
+            return _context.Events.Find(id);
+        }
+
         public bool EventExists(string title, DateTime date, string location)
         {
             return _context.Events.Any(e => e.Title == title && e.Date == date && e.Location == location);
