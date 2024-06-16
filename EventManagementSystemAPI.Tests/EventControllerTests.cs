@@ -1,6 +1,7 @@
 using EventManagementSystemAPI.Controllers;
 using EventMS.Application.DTOs;
 using EventMS.Application.Port;
+using EventMS.Application.Ports;
 using EventMS.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -10,12 +11,14 @@ namespace EventManagementSystemAPI.Tests
     public class EventControllerTests
     {
         private readonly Mock<ICreateEventUseCase> _mockCreateEventUseCase;
+        private readonly Mock<IUpdateEventUseCase> _mockUpdateEventUseCase;
         private readonly EventController _controller;
 
         public EventControllerTests()
         {
             _mockCreateEventUseCase = new Mock<ICreateEventUseCase>();
-            _controller = new EventController(_mockCreateEventUseCase.Object);
+            _mockUpdateEventUseCase = new Mock<IUpdateEventUseCase>();
+            _controller = new EventController(_mockCreateEventUseCase.Object, _mockUpdateEventUseCase.Object);
         }
 
         [Fact]
