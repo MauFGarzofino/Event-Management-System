@@ -1,4 +1,5 @@
-﻿using EventMS.Application.Port;
+﻿using EventManagementSystemAPI.Filters;
+using EventMS.Application.Port;
 using EventMS.Application.Ports;
 using EventMS.Application.UseCases;
 using EventMS.Domain.Interfaces;
@@ -18,6 +19,15 @@ namespace EventManagementSystemAPI.Util
             services.AddScoped<ICreateEventUseCase, CreateEventUseCase>();
             services.AddScoped<IUpdateEventUseCase, UpdateEventUseCase>();
         }
+
+        public static void AddResponseFilter(this IServiceCollection services)
+        {
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<ResponseFilter>();
+            });
+        }
+
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using EventMS.Application.DTOs;
+﻿using EventManagementSystemAPI.Models;
+using EventMS.Application.DTOs;
 using EventMS.Application.Port;
 using EventMS.Application.Ports;
 using EventMS.Application.UseCases;
@@ -52,7 +53,14 @@ namespace EventManagementSystemAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(Response<Dictionary<string, string[]>>.CreateError(
+                    400,
+                    "Validation failed. Please check the provided data.",
+                    ModelState.ToDictionary(
+                        m => m.Key,
+                        m => m.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    )
+                ));
             }
 
             updatedEventDto.Id = id;
@@ -60,19 +68,35 @@ namespace EventManagementSystemAPI.Controllers
             try
             {
                 var updatedEvent = _updateEventUseCase.Execute(updatedEventDto);
-                return Ok(updatedEvent);
+                return Ok(Response<Event>.CreateSuccess(
+                    200,
+                    "Event updated successfully.",
+                    updatedEvent
+                ));
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(Response<string>.CreateError(
+                    404,
+                    ex.Message,
+                    null
+                ));
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(Response<string>.CreateError(
+                    400,
+                    ex.Message,
+                    null
+                ));
             }
             catch (InvalidOperationException ex)
             {
-                return Conflict(ex.Message);
+                return Conflict(Response<string>.CreateError(
+                    409,
+                    ex.Message,
+                    null
+                ));
             }
         }
 

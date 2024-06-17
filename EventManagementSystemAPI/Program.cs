@@ -24,6 +24,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SchemaFilter<ExampleSchemaFilter>();
     c.EnableAnnotations();
 });
+//builder.Services.AddResponseFilter();
 
 //mapper 
 var mapperConfig = new MapperConfiguration(cfg =>
