@@ -1,29 +1,23 @@
-﻿
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace EventManagementSystemAPI.Models
 {
-    public class Response <T>
+    public class Response<T>
     {
         public int Status { get; set; }
         public string Message { get; set; }
-        public T Data { get; set; }
-        public IDictionary<string, string[]> Errors { get; set; }
+        public string Errors { get; set; }
 
-        private Response(int status, string message, T data, IDictionary<string, string[]> errors)
+        public T Data { get; set; }
+        
+        public Response(int status, string message, T data)
         {
             Status = status;
             Message = message;
+            Errors = null;
             Data = data;
-            Errors = errors;
-        }
-
-        public static Response<T> CreateSuccess(int status, string message, T data)
-        {
-            return new Response<T>(status, message, data, null);
-        }
-
-        public static Response<T> CreateError(int status, string message, IDictionary<string, string[]> errors)
-        {
-            return new Response<T>(status, message, default(T), errors);
+                       
         }
 
     }

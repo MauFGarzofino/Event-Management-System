@@ -20,14 +20,5 @@ namespace EventManagementSystemAPI.Util
             services.AddScoped<IUpdateEventUseCase, UpdateEventUseCase>();
         }
 
-        public static void AddResponseFilter(this IServiceCollection services)
-        {
-            services.AddControllers(options =>
-            {
-                options.Filters.Add<ResponseFilter>();
-            });
-        }
-
-
     }
 }

@@ -1,13 +1,17 @@
 using AutoMapper;
 using EventManagementSystemAPI.Filters;
+using EventManagementSystemAPI.Filters.validations;
 using EventManagementSystemAPI.MappingProfile;
 using EventManagementSystemAPI.Util;
 using EventMS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mime;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+
 
 // Configure DbContext with SQL Server
 var sqlConnection = builder.Configuration["ConnectionStrings:EMS:SqlDb"];
@@ -17,6 +21,7 @@ builder.Services.AddSqlServer<ApplicationDbContext>(sqlConnection, options => op
 builder.Services.AddRepositories();
 builder.Services.AddUseCases();
 
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -24,7 +29,21 @@ builder.Services.AddSwaggerGen(c =>
     c.SchemaFilter<ExampleSchemaFilter>();
     c.EnableAnnotations();
 });
-//builder.Services.AddResponseFilter();
+
+// Validations
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var result = new ValidationFailedResult(context.ModelState);
+
+            result.ContentTypes.Add(MediaTypeNames.Application.Json);
+            result.ContentTypes.Add(MediaTypeNames.Application.Xml);
+
+            return result;
+        };
+    });
 
 //mapper 
 var mapperConfig = new MapperConfiguration(cfg =>
@@ -34,6 +53,7 @@ var mapperConfig = new MapperConfiguration(cfg =>
 
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
+
 
 var app = builder.Build();
 
@@ -62,6 +82,8 @@ else
         c.RoutePrefix = string.Empty;
     });
 }
+
+
 
 app.UseHttpsRedirection();
 

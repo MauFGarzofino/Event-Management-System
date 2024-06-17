@@ -1,4 +1,6 @@
-﻿using EventManagementSystemAPI.Models;
+﻿using EventManagementSystemAPI.Filters;
+using EventManagementSystemAPI.Filters.validations;
+using EventManagementSystemAPI.Models;
 using EventMS.Application.DTOs;
 using EventMS.Application.Port;
 using EventMS.Application.Ports;
@@ -14,6 +16,7 @@ namespace EventManagementSystemAPI.Controllers
 {
     [ApiController]
     [Route("events")]
+    [ValidateModel]
     public class EventController : ControllerBase
     {
         private readonly ICreateEventUseCase _createEventUseCase;
@@ -37,14 +40,31 @@ namespace EventManagementSystemAPI.Controllers
             {
                 var createdEvent = _createEventUseCase.Execute(newEventDto);
                 return CreatedAtAction(nameof(Post), new { id = createdEvent.Id }, createdEvent);
+
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new Response<string>(
+                    404,
+                    ex.Message,
+                    null
+                ));
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new Response<string>(
+                    400,
+                    ex.Message,
+                    null
+                ));
             }
             catch (InvalidOperationException ex)
             {
-                return Conflict(ex.Message);
+                return Conflict(new Response<string>(
+                    409,
+                    ex.Message,
+                    null
+                ));
             }
         }
 
@@ -53,7 +73,7 @@ namespace EventManagementSystemAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(Response<Dictionary<string, string[]>>.CreateError(
+                return BadRequest(new Response<Dictionary<string, string[]>>(
                     400,
                     "Validation failed. Please check the provided data.",
                     ModelState.ToDictionary(
@@ -68,7 +88,7 @@ namespace EventManagementSystemAPI.Controllers
             try
             {
                 var updatedEvent = _updateEventUseCase.Execute(updatedEventDto);
-                return Ok(Response<Event>.CreateSuccess(
+                return Ok(new Response<Event>(
                     200,
                     "Event updated successfully.",
                     updatedEvent
@@ -76,7 +96,7 @@ namespace EventManagementSystemAPI.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(Response<string>.CreateError(
+                return NotFound(new Response<string>(
                     404,
                     ex.Message,
                     null
@@ -84,7 +104,7 @@ namespace EventManagementSystemAPI.Controllers
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(Response<string>.CreateError(
+                return BadRequest(new Response<string>(
                     400,
                     ex.Message,
                     null
@@ -92,7 +112,7 @@ namespace EventManagementSystemAPI.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return Conflict(Response<string>.CreateError(
+                return Conflict(new Response<string>(
                     409,
                     ex.Message,
                     null
