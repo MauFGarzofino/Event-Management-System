@@ -15,6 +15,7 @@ namespace EventManagementSystemAPI.Util
 
         public static void AddUseCases(this IServiceCollection services)
         {
+            services.AddScoped<IGetAllEventsUseCase, GetAllEventsUseCase>();
             services.AddScoped<ICreateEventUseCase, CreateEventUseCase>();
             services.AddScoped<IUpdateEventUseCase, UpdateEventUseCase>();
         }

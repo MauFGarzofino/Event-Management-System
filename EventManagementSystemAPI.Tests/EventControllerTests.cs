@@ -10,15 +10,51 @@ namespace EventManagementSystemAPI.Tests
 {
     public class EventControllerTests
     {
+        private readonly Mock<IGetAllEventsUseCase> _mockGetAllEventsUseCase;
         private readonly Mock<ICreateEventUseCase> _mockCreateEventUseCase;
         private readonly Mock<IUpdateEventUseCase> _mockUpdateEventUseCase;
         private readonly EventController _controller;
 
         public EventControllerTests()
         {
+            _mockGetAllEventsUseCase = new Mock<IGetAllEventsUseCase>();
             _mockCreateEventUseCase = new Mock<ICreateEventUseCase>();
             _mockUpdateEventUseCase = new Mock<IUpdateEventUseCase>();
-            _controller = new EventController(_mockCreateEventUseCase.Object, _mockUpdateEventUseCase.Object);
+            _controller = new EventController(_mockGetAllEventsUseCase.Object, _mockCreateEventUseCase.Object, _mockUpdateEventUseCase.Object);
+        }
+
+        [Fact]
+        public void Get_ShouldReturnOkResult_WhenEventsExist()
+        {
+            // Arrange
+            var eventDtos = new List<EventDto>
+            {
+                new EventDto { Title = "Event 1" },
+                new EventDto { Title = "Event 2" }
+            };
+            _mockGetAllEventsUseCase.Setup(u => u.Execute()).Returns(eventDtos);
+
+            // Act
+            var result = _controller.Get();
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnValue = Assert.IsType<List<EventDto>>(okResult.Value);
+            Assert.Equal(2, returnValue.Count);
+        }
+
+        [Fact]
+        public void Get_ShouldReturnNoContent_WhenNoEventsExist()
+        {
+            // Arrange
+            var eventDtos = new List<EventDto>();
+            _mockGetAllEventsUseCase.Setup(u => u.Execute()).Returns(eventDtos);
+
+            // Act
+            var result = _controller.Get();
+
+            // Assert
+            Assert.IsType<NoContentResult>(result);
         }
 
         [Fact]

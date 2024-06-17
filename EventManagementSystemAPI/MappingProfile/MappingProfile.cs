@@ -9,6 +9,7 @@ namespace EventManagementSystemAPI.MappingProfile
         public MappingProfile()
         {
             // create the profiles
+            CreateMap<Event, EventDto>();
             CreateMap<EventDto, Event>();
             CreateMap<UpdateEventDto, Event>();
 

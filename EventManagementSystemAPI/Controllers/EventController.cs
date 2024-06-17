@@ -15,13 +15,28 @@ namespace EventManagementSystemAPI.Controllers
     [Route("events")]
     public class EventController : ControllerBase
     {
+        private readonly IGetAllEventsUseCase _getAllEventsUseCase;
         private readonly ICreateEventUseCase _createEventUseCase;
         private readonly IUpdateEventUseCase _updateEventUseCase;
 
-        public EventController(ICreateEventUseCase createEventUseCase, IUpdateEventUseCase updateEventUseCase)
+        public EventController(IGetAllEventsUseCase getAllEventsUseCase, ICreateEventUseCase createEventUseCase, IUpdateEventUseCase updateEventUseCase)
         {
+            _getAllEventsUseCase = getAllEventsUseCase;
             _createEventUseCase = createEventUseCase;
             _updateEventUseCase = updateEventUseCase;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var events = _getAllEventsUseCase.Execute();
+
+            if (!events.Any())
+            {
+                return NoContent();
+            }
+
+            return Ok(events);
         }
 
         [HttpPost]

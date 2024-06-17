@@ -19,6 +19,11 @@ namespace EventMS.Infrastructure.Repositories
             _context = context;
         }
 
+        public IEnumerable<Event> GetAllEvents()
+        {
+            return _context.Events.ToList();
+        }
+
         public void AddEvent(Event newEvent)
         {
             _context.Events.Add(newEvent);
