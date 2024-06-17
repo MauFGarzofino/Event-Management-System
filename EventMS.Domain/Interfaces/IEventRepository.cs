@@ -9,6 +9,7 @@ namespace EventMS.Domain.Interfaces
 {
     public interface IEventRepository
     {
+        IEnumerable<Event> GetAllEvents();
         void AddEvent(Event newEvent);
         void UpdateEvent(Event newEvent);
         bool EventExists(string title, DateTime date, string location);
