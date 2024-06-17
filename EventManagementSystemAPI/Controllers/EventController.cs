@@ -39,7 +39,12 @@ namespace EventManagementSystemAPI.Controllers
             try
             {
                 var createdEvent = _createEventUseCase.Execute(newEventDto);
-                return CreatedAtAction(nameof(Post), new { id = createdEvent.Id }, createdEvent);
+               
+                return Ok(new Response<Event>(
+                    201,
+                    "Event created successfully.",
+                    createdEvent
+                ));
 
             }
             catch (KeyNotFoundException ex)
