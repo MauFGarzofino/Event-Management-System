@@ -40,7 +40,7 @@ namespace EventManagementSystemAPI.Controllers
             {
                 var createdEvent = _createEventUseCase.Execute(newEventDto);
                
-                return Ok(new Response<Event>(
+                return CreatedAtAction(nameof(Post), new { id = createdEvent.Id }, new Response<Event>(
                     201,
                     "Event created successfully.",
                     createdEvent

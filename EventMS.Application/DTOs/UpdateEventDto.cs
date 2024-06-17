@@ -14,7 +14,7 @@ namespace EventMS.Application.DTOs
         //[Required]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "The Title field is required.")]
+        [Required]
         public string? Title { get; set; }
 
         [StringLength(200)]
