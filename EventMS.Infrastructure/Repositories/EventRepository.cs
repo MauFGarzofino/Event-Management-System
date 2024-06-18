@@ -19,6 +19,10 @@ namespace EventMS.Infrastructure.Repositories
             _context = context;
         }
 
+        public Event GetEventByTitle(string title)
+        {
+            return _context.Events.FirstOrDefault(e => e.Title == title);
+        }
         public IEnumerable<Event> GetAllEvents()
         {
             return _context.Events.ToList();
@@ -44,6 +48,21 @@ namespace EventMS.Infrastructure.Repositories
             _context.Entry(updatedEvent).State = EntityState.Modified;
             _context.SaveChanges();
         }
+
+        public void DeleteEvent(int eventId)
+        {
+            var eventToDelete = _context.Events.Find(eventId);
+            if (eventToDelete != null)
+            {
+                _context.Events.Remove(eventToDelete);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Event with id {eventId} not found.");
+            }
+        }
+
         public Event GetEventById(int id)
         {
             return _context.Events.Find(id);

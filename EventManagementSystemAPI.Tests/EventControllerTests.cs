@@ -5,6 +5,10 @@ using EventMS.Application.Ports;
 using EventMS.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Xunit;
+using System.Collections.Generic;
+using System;
+
 
 namespace EventManagementSystemAPI.Tests
 {
@@ -13,6 +17,7 @@ namespace EventManagementSystemAPI.Tests
         private readonly Mock<IGetAllEventsUseCase> _mockGetAllEventsUseCase;
         private readonly Mock<ICreateEventUseCase> _mockCreateEventUseCase;
         private readonly Mock<IUpdateEventUseCase> _mockUpdateEventUseCase;
+        private readonly Mock<IDeleteEventUseCase> _mockDeleteEventUseCase;
         private readonly EventController _controller;
 
         public EventControllerTests()
@@ -20,7 +25,14 @@ namespace EventManagementSystemAPI.Tests
             _mockGetAllEventsUseCase = new Mock<IGetAllEventsUseCase>();
             _mockCreateEventUseCase = new Mock<ICreateEventUseCase>();
             _mockUpdateEventUseCase = new Mock<IUpdateEventUseCase>();
-            _controller = new EventController(_mockGetAllEventsUseCase.Object, _mockCreateEventUseCase.Object, _mockUpdateEventUseCase.Object);
+            _mockDeleteEventUseCase = new Mock<IDeleteEventUseCase>();
+
+            _controller = new EventController(
+                _mockGetAllEventsUseCase.Object,
+                _mockCreateEventUseCase.Object,
+                _mockUpdateEventUseCase.Object,
+                _mockDeleteEventUseCase.Object
+                );
         }
 
         [Fact]
@@ -102,5 +114,36 @@ namespace EventManagementSystemAPI.Tests
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.IsType<SerializableError>(badRequestResult.Value);
         }
+
+        [Fact]
+        public void Delete_ShouldReturnNoContent_WhenEventIsDeleted()
+        {
+            // Arrange
+            var deleteEventDto = new DeleteEventDto { Title = "Event to Delete" };
+            _mockDeleteEventUseCase.Setup(x => x.Execute(It.IsAny<DeleteEventDto>())).Verifiable();
+
+            // Act
+            var result = _controller.Delete(deleteEventDto.Title);
+
+            // Assert
+            Assert.IsType<NoContentResult>(result);
+            _mockDeleteEventUseCase.Verify(x => x.Execute(It.Is<DeleteEventDto>(dto => dto.Title == deleteEventDto.Title)), Times.Once);
+        }
+
+        [Fact]
+        public void Delete_ShouldReturnNotFound_WhenEventNotFound()
+        {
+            // Arrange
+            var deleteEventDto = new DeleteEventDto { Title = "Event to Delete" };
+            _mockDeleteEventUseCase.Setup(x => x.Execute(It.IsAny<DeleteEventDto>())).Throws(new KeyNotFoundException("Event with title 'Event to Delete' not found."));
+
+            // Act
+            var result = _controller.Delete(deleteEventDto.Title);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal("Event with title 'Event to Delete' not found.", notFoundResult.Value);
+        }
+
     }
 }

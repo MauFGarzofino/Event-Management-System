@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Update;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
 
 namespace EventManagementSystemAPI.Controllers
 {
@@ -18,12 +19,14 @@ namespace EventManagementSystemAPI.Controllers
         private readonly IGetAllEventsUseCase _getAllEventsUseCase;
         private readonly ICreateEventUseCase _createEventUseCase;
         private readonly IUpdateEventUseCase _updateEventUseCase;
+        private readonly IDeleteEventUseCase _deleteEventUseCase;
 
-        public EventController(IGetAllEventsUseCase getAllEventsUseCase, ICreateEventUseCase createEventUseCase, IUpdateEventUseCase updateEventUseCase)
+        public EventController(IGetAllEventsUseCase getAllEventsUseCase, ICreateEventUseCase createEventUseCase, IUpdateEventUseCase updateEventUseCase, IDeleteEventUseCase deleteEventUseCase)
         {
             _getAllEventsUseCase = getAllEventsUseCase;
             _createEventUseCase = createEventUseCase;
             _updateEventUseCase = updateEventUseCase;
+            _deleteEventUseCase = deleteEventUseCase;
         }
 
         [HttpGet]
@@ -88,6 +91,25 @@ namespace EventManagementSystemAPI.Controllers
             catch (InvalidOperationException ex)
             {
                 return Conflict(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(string title)
+        {
+            try
+            {
+                var deleteDto = new DeleteEventDto { Title = title };
+                _deleteEventUseCase.Execute(deleteDto);
+                return Ok("Event deleted successfully");
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Event was not found");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
