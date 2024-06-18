@@ -1,4 +1,5 @@
 using EventManagementSystemAPI.Controllers;
+using EventManagementSystemAPI.Models;
 using EventMS.Application.DTOs;
 using EventMS.Application.Port;
 using EventMS.Application.Ports;
@@ -82,11 +83,18 @@ namespace EventManagementSystemAPI.Tests
 
             // Act
             var result = _controller.Post(newEventDto);
-
+                       
             // Assert
             var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
             Assert.Equal("Post", createdAtActionResult.ActionName);
-            Assert.Equal(createdEvent.Id, ((Event)createdAtActionResult.Value).Id);
+
+            
+            Assert.Equal("Post", createdAtActionResult.ActionName);
+            Assert.Equal(201, ((Response<Event>)createdAtActionResult.Value).Status);
+            Assert.Equal("Event created successfully.", ((Response<Event>)createdAtActionResult.Value).Message);
+            Assert.Null(((Response<Event>)createdAtActionResult.Value).Errors);
+            Assert.Equal(createdEvent.Id, ((Response<Event>)createdAtActionResult.Value).Data.Id);
+
         }
 
         [Fact]

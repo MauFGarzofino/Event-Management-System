@@ -1,4 +1,5 @@
-﻿using EventMS.Application.Port;
+﻿using EventManagementSystemAPI.Filters;
+using EventMS.Application.Port;
 using EventMS.Application.Ports;
 using EventMS.Application.UseCases;
 using EventMS.Domain.Interfaces;
