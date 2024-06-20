@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>94001c72-2e8a-4890-b328-58f306af6018</UserSecretsId>
     <PublishAot>False</PublishAot>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +15,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
@@ -20,6 +23,10 @@
     <ProjectReference Include="..\EventMS.Application\EventMS.Application.csproj" />
     <ProjectReference Include="..\EventMS.Domain\EventMS.Domain.csproj" />
     <ProjectReference Include="..\EventMS.Infrastructure\EventMS.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="..\.dockerignore" Link="docker-compose\.dockerignore" />
   </ItemGroup>
 
 </Project>
