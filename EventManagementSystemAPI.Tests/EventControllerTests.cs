@@ -6,6 +6,7 @@ using EventMS.Application.Ports;
 using EventMS.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Xunit;
 
 namespace EventManagementSystemAPI.Tests
 {
@@ -14,6 +15,7 @@ namespace EventManagementSystemAPI.Tests
         private readonly Mock<IGetAllEventsUseCase> _mockGetAllEventsUseCase;
         private readonly Mock<ICreateEventUseCase> _mockCreateEventUseCase;
         private readonly Mock<IUpdateEventUseCase> _mockUpdateEventUseCase;
+        private readonly Mock<IDeleteEventUseCase> _mockDeleteEventUseCase;
         private readonly EventController _controller;
 
         public EventControllerTests()
@@ -21,7 +23,13 @@ namespace EventManagementSystemAPI.Tests
             _mockGetAllEventsUseCase = new Mock<IGetAllEventsUseCase>();
             _mockCreateEventUseCase = new Mock<ICreateEventUseCase>();
             _mockUpdateEventUseCase = new Mock<IUpdateEventUseCase>();
-            _controller = new EventController(_mockGetAllEventsUseCase.Object, _mockCreateEventUseCase.Object, _mockUpdateEventUseCase.Object);
+            _mockDeleteEventUseCase = new Mock<IDeleteEventUseCase>();
+            _controller = new EventController(
+                _mockGetAllEventsUseCase.Object,
+                _mockCreateEventUseCase.Object,
+                _mockUpdateEventUseCase.Object,
+                _mockDeleteEventUseCase.Object
+                );
         }
 
         [Fact]
@@ -110,5 +118,51 @@ namespace EventManagementSystemAPI.Tests
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.IsType<SerializableError>(badRequestResult.Value);
         }
+
+        [Fact]
+        public void Delete_EventExists_ReturnsOk()
+        {
+            // Arrange
+            int eventId = 1;
+            _mockDeleteEventUseCase.Setup(x => x.DeleteEvent(eventId));
+
+            // Act
+            var result = _controller.Delete(eventId); // Cambio aquí a _controller
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal("Event deleted successfully", okResult.Value);
+        }
+
+        [Fact]
+        public void Delete_EventNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            int eventId = 1;
+            _mockDeleteEventUseCase.Setup(x => x.DeleteEvent(eventId)).Throws(new ArgumentException("Event not found"));
+
+            // Act
+            var result = _controller.Delete(eventId); // Cambio aquí a _controller
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal("Event not found", notFoundResult.Value);
+        }
+
+        [Fact]
+        public void Delete_InternalServerError_ReturnsStatusCode500()
+        {
+            // Arrange
+            int eventId = 1;
+            _mockDeleteEventUseCase.Setup(x => x.DeleteEvent(eventId)).Throws(new Exception("Some internal error"));
+
+            // Act
+            var result = _controller.Delete(eventId); // Cambio aquí a _controller
+
+            // Assert
+            var statusCodeResult = Assert.IsType<StatusCodeResult>(result);
+            Assert.Equal(500, statusCodeResult.StatusCode);
+        }
+
     }
 }

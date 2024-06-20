@@ -22,12 +22,20 @@ namespace EventManagementSystemAPI.Controllers
         private readonly IGetAllEventsUseCase _getAllEventsUseCase;
         private readonly ICreateEventUseCase _createEventUseCase;
         private readonly IUpdateEventUseCase _updateEventUseCase;
+        private readonly IDeleteEventUseCase _deleteEventUseCase;
 
-        public EventController(IGetAllEventsUseCase getAllEventsUseCase, ICreateEventUseCase createEventUseCase, IUpdateEventUseCase updateEventUseCase)
+        public EventController(
+            IGetAllEventsUseCase getAllEventsUseCase,
+            ICreateEventUseCase createEventUseCase,
+            IUpdateEventUseCase updateEventUseCase,
+            IDeleteEventUseCase deleteEventUseCase
+            )
         {
+
             _getAllEventsUseCase = getAllEventsUseCase;
             _createEventUseCase = createEventUseCase;
             _updateEventUseCase = updateEventUseCase;
+            _deleteEventUseCase = deleteEventUseCase;
         }
 
         [HttpGet]
@@ -139,6 +147,25 @@ namespace EventManagementSystemAPI.Controllers
                     ex.Message,
                     null
                 ));
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _deleteEventUseCase.DeleteEvent(id);
+                return Ok("Event deleted successfully");
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound("Event not found");
+            }
+            catch (Exception ex)
+            {
+                // Log any other unexpected exceptions
+                return StatusCode(500, "Internal server error");
             }
         }
 

@@ -53,5 +53,12 @@ namespace EventMS.Infrastructure.Repositories
         {
             return _context.Events.Any(e => e.Title == title && e.Date == date && e.Location == location);
         }
+
+        public void DeleteEvent(Event existingEvent)
+        {
+            _context.Events.Remove(existingEvent);
+            _context.SaveChanges();
+        }
+
     }
 }

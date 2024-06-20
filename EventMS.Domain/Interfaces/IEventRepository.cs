@@ -14,5 +14,6 @@ namespace EventMS.Domain.Interfaces
         void UpdateEvent(Event newEvent);
         bool EventExists(string title, DateTime date, string location);
         Event GetEventById(int id);
+        void DeleteEvent(Event existingEvent);
     }
 }
