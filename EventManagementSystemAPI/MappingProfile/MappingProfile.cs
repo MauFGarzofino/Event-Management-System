@@ -12,7 +12,7 @@ namespace EventManagementSystemAPI.MappingProfile
             CreateMap<Event, EventDto>();
             CreateMap<EventDto, Event>();
             CreateMap<UpdateEventDto, Event>();
-
+            CreateMap<Event, EventDetailDto>();
         }
     }
 }

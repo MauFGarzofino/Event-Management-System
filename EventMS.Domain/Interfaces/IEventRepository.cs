@@ -13,6 +13,6 @@ namespace EventMS.Domain.Interfaces
         void AddEvent(Event newEvent);
         void UpdateEvent(Event newEvent);
         bool EventExists(string title, DateTime date, string location);
-        Event GetEventById(int id);
+        Event? GetEventById(int id);
     }
 }

@@ -44,14 +44,15 @@ namespace EventMS.Infrastructure.Repositories
             _context.Entry(updatedEvent).State = EntityState.Modified;
             _context.SaveChanges();
         }
-        public Event GetEventById(int id)
+        public Event? GetEventById(int id)
         {
-            return _context.Events.Find(id);
+            return _context.Events.FirstOrDefault(e => e.Id == id);
         }
 
         public bool EventExists(string title, DateTime date, string location)
         {
             return _context.Events.Any(e => e.Title == title && e.Date == date && e.Location == location);
         }
+
     }
 }

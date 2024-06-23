@@ -22,12 +22,20 @@ namespace EventManagementSystemAPI.Controllers
         private readonly IGetAllEventsUseCase _getAllEventsUseCase;
         private readonly ICreateEventUseCase _createEventUseCase;
         private readonly IUpdateEventUseCase _updateEventUseCase;
+        private readonly IGetEventByIdUseCase _getEventByIdUseCase;
 
-        public EventController(IGetAllEventsUseCase getAllEventsUseCase, ICreateEventUseCase createEventUseCase, IUpdateEventUseCase updateEventUseCase)
+        public EventController
+            (
+            IGetAllEventsUseCase getAllEventsUseCase,
+            ICreateEventUseCase createEventUseCase,
+            IUpdateEventUseCase updateEventUseCase,
+            IGetEventByIdUseCase getEventByIdUseCase
+            )
         {
             _getAllEventsUseCase = getAllEventsUseCase;
             _createEventUseCase = createEventUseCase;
             _updateEventUseCase = updateEventUseCase;
+            _getEventByIdUseCase = getEventByIdUseCase;
         }
 
         [HttpGet]
@@ -141,6 +149,37 @@ namespace EventManagementSystemAPI.Controllers
                 ));
             }
         }
+
+        [HttpGet("{eventId}")]
+        public IActionResult GetEventById(int eventId)
+        {
+            try
+            {
+                var eventDto = _getEventByIdUseCase.GetEventById(eventId);
+                return Ok(new Response<EventDetailDto>(
+                    200,
+                    "Event retrieved successfully",
+                    eventDto
+                ));
+            }
+            catch (ArgumentException)
+            {
+                return NotFound(new Response<string>(
+                    404,
+                    "Event not found",
+                    null
+                ));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response<string>(
+                    500,
+                    "An error occurred while retrieving the event",
+                    ex.Message
+                ));
+            }
+        }
+
 
     }
 }

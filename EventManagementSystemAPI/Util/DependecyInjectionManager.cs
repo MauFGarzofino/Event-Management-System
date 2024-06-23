@@ -19,6 +19,7 @@ namespace EventManagementSystemAPI.Util
             services.AddScoped<IGetAllEventsUseCase, GetAllEventsUseCase>();
             services.AddScoped<ICreateEventUseCase, CreateEventUseCase>();
             services.AddScoped<IUpdateEventUseCase, UpdateEventUseCase>();
+            services.AddScoped<IGetEventByIdUseCase, GetEventByIdUseCase>();
         }
 
     }
