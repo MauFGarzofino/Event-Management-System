@@ -156,30 +156,17 @@ namespace EventManagementSystemAPI.Controllers
             try
             {
                 var eventDto = _getEventByIdUseCase.GetEventById(eventId);
-                return Ok(new Response<EventDetailDto>(
-                    200,
-                    "Event retrieved successfully",
-                    eventDto
-                ));
+                return Ok(eventDto);
             }
             catch (ArgumentException)
             {
-                return NotFound(new Response<string>(
-                    404,
-                    "Event not found",
-                    null
-                ));
+                return NotFound("Event not found");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new Response<string>(
-                    500,
-                    "An error occurred while retrieving the event",
-                    ex.Message
-                ));
+                return StatusCode(500, "An error occurred while retrieving the event: " + ex.Message);
             }
         }
-
 
     }
 }

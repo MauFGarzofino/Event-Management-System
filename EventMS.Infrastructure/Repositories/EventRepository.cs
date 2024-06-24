@@ -44,7 +44,7 @@ namespace EventMS.Infrastructure.Repositories
             _context.Entry(updatedEvent).State = EntityState.Modified;
             _context.SaveChanges();
         }
-        public Event? GetEventById(int id)
+        public Event GetEventById(int id)
         {
             return _context.Events.FirstOrDefault(e => e.Id == id);
         }

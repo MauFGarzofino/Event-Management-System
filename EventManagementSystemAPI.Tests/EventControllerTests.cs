@@ -14,6 +14,7 @@ namespace EventManagementSystemAPI.Tests
         private readonly Mock<IGetAllEventsUseCase> _mockGetAllEventsUseCase;
         private readonly Mock<ICreateEventUseCase> _mockCreateEventUseCase;
         private readonly Mock<IUpdateEventUseCase> _mockUpdateEventUseCase;
+        private readonly Mock<IGetEventByIdUseCase> _mockGetEventByIdUseCase;
         private readonly EventController _controller;
 
         public EventControllerTests()
@@ -21,7 +22,13 @@ namespace EventManagementSystemAPI.Tests
             _mockGetAllEventsUseCase = new Mock<IGetAllEventsUseCase>();
             _mockCreateEventUseCase = new Mock<ICreateEventUseCase>();
             _mockUpdateEventUseCase = new Mock<IUpdateEventUseCase>();
-            _controller = new EventController(_mockGetAllEventsUseCase.Object, _mockCreateEventUseCase.Object, _mockUpdateEventUseCase.Object);
+            _mockGetEventByIdUseCase = new Mock<IGetEventByIdUseCase>();
+            _controller = new EventController(
+                _mockGetAllEventsUseCase.Object,
+                _mockCreateEventUseCase.Object,
+                _mockUpdateEventUseCase.Object,
+                _mockGetEventByIdUseCase.Object
+                );
         }
 
         [Fact]
@@ -109,6 +116,50 @@ namespace EventManagementSystemAPI.Tests
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.IsType<SerializableError>(badRequestResult.Value);
+        }
+
+        [Fact]
+        public void GetEventById_ExistingEvent_ReturnsOkResult()
+        {
+            // Arrange
+            var eventId = 1;
+            var eventDetailDto = new EventDetailDto
+            {
+                Id = eventId,
+                Title = "Sample Event",
+                Description = "Sample Description",
+                Date = DateTime.Now.Date,
+                Time = DateTime.Now.TimeOfDay,
+                Location = "Sample Location"
+            };
+
+            _mockGetEventByIdUseCase.Setup(useCase => useCase.GetEventById(eventId)).Returns(eventDetailDto);
+
+            // Act
+            var result = _controller.GetEventById(eventId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<Response<EventDetailDto>>(okResult.Value);
+            Assert.Equal(200, okResult.StatusCode);
+            Assert.Equal(eventDetailDto, response.Data);
+        }
+
+        [Fact]
+        public void GetEventById_NonExistingEvent_ReturnsNotFoundResult()
+        {
+            // Arrange
+            var eventId = 1;
+            _mockGetEventByIdUseCase.Setup(useCase => useCase.GetEventById(eventId)).Throws(new ArgumentException("Event not found"));
+
+            // Act
+            var result = _controller.GetEventById(eventId);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            var response = Assert.IsType<Response<string>>(notFoundResult.Value);
+            Assert.Equal(404, notFoundResult.StatusCode);
+            Assert.Equal("Event not found", response.Message);
         }
     }
 }

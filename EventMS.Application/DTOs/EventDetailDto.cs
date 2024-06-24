@@ -24,11 +24,13 @@ namespace EventMS.Application.DTOs
 
         [Required]
         [DataType(DataType.Date)]
+        [Column(TypeName = "Date")]
         [SwaggerSchema(Description = "The date of the event", Format = "date")]
         public DateTime Date { get; set; }
 
         [Required]
         [DataType(DataType.Time)]
+        [Column(TypeName = "Time")]
         [SwaggerSchema(Description = "The time of the event", Format = "time")]
         public TimeSpan Time { get; set; }
 
