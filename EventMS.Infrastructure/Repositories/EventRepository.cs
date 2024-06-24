@@ -21,7 +21,7 @@ namespace EventMS.Infrastructure.Repositories
 
         public IEnumerable<Event> GetAllEvents()
         {
-            return _context.Events.ToList();
+            return _context.Events.Include(e => e.Tickets).ToList();
         }
 
         public void AddEvent(Event newEvent)
@@ -36,7 +36,6 @@ namespace EventMS.Infrastructure.Repositories
                 .Local
                 .FirstOrDefault(entry => entry.Id.Equals(updatedEvent.Id));
 
-            // check if local is not null 
             if (local != null)
             {
                 _context.Entry(local).State = EntityState.Detached;
@@ -44,14 +43,15 @@ namespace EventMS.Infrastructure.Repositories
             _context.Entry(updatedEvent).State = EntityState.Modified;
             _context.SaveChanges();
         }
+
         public Event GetEventById(int id)
         {
-            return _context.Events.Find(id);
+            return _context.Events.Include(e => e.Tickets).FirstOrDefault(e => e.Id == id);
         }
 
-        public bool EventExists(string title, DateTime date, string location)
+        public bool EventExists(string title, DateTime date, TimeSpan time, string location)
         {
-            return _context.Events.Any(e => e.Title == title && e.Date == date && e.Location == location);
+            return _context.Events.Any(e => e.Title == title && e.Date == date && e.Time == time && e.Location == location);
         }
     }
 }

@@ -7,6 +7,7 @@ using EventMS.Application.Ports;
 using EventMS.Application.UseCases;
 using EventMS.Domain.Entities;
 using EventMS.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Update;
@@ -30,6 +31,7 @@ namespace EventManagementSystemAPI.Controllers
             _updateEventUseCase = updateEventUseCase;
         }
 
+        [Authorize(Policy = "OrganizerClientRole")]
         [HttpGet]
         public IActionResult Get()
         {
@@ -43,6 +45,7 @@ namespace EventManagementSystemAPI.Controllers
             return Ok(events);
         }
 
+        [Authorize(Policy = "OrganizerClientRole")]
         [HttpPost]
         public IActionResult Post([FromBody] EventDto newEventDto)
         {
@@ -54,7 +57,6 @@ namespace EventManagementSystemAPI.Controllers
             try
             {
                 var createdEvent = _createEventUseCase.Execute(newEventDto);
-                //CreatedAtAction(nameof(Post), new { id = createdEvent.Id },
 
                 return CreatedAtAction(nameof(Post), new { id = createdEvent.Id }, new Response<Event>(
                     201,
@@ -90,6 +92,7 @@ namespace EventManagementSystemAPI.Controllers
             }
         }
 
+        [Authorize(Policy = "OrganizerClientRole")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] UpdateEventDto updatedEventDto)
         {

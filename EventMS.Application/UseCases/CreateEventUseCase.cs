@@ -24,14 +24,14 @@ namespace EventMS.Application.UseCases
 
         public Event Execute(EventDto newEventDto)
         {
-            var newEvent = _mapper.Map<Event>(newEventDto);
-
-            if (string.IsNullOrWhiteSpace(newEvent.Title) || newEvent.Date == default || newEvent.Time == default || string.IsNullOrWhiteSpace(newEvent.Location))
+            if (string.IsNullOrWhiteSpace(newEventDto.Title) || newEventDto.Date == default || newEventDto.Time == default || string.IsNullOrWhiteSpace(newEventDto.Location))
             {
                 throw new ArgumentException("Missing mandatory fields: title, date, time, location.");
             }
 
-            if (_eventRepository.EventExists(newEvent.Title, newEvent.Date, newEvent.Location))
+            var newEvent = _mapper.Map<Event>(newEventDto);
+
+            if (_eventRepository.EventExists(newEvent.Title, newEvent.Date, newEvent.Time, newEvent.Location))
             {
                 throw new InvalidOperationException("An event with the same title, date, and location already exists.");
             }

@@ -12,7 +12,7 @@ namespace EventMS.Domain.Interfaces
         IEnumerable<Event> GetAllEvents();
         void AddEvent(Event newEvent);
         void UpdateEvent(Event newEvent);
-        bool EventExists(string title, DateTime date, string location);
+        bool EventExists(string title, DateTime date, TimeSpan time, string location);
         Event GetEventById(int id);
     }
 }
