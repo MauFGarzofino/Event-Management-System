@@ -11,7 +11,7 @@ namespace EventMS.Application.DTOs
 {
     public class UpdateEventDto
     {
-        //[Required]
+        [Required]
         public int Id { get; set; }
 
         [Required]

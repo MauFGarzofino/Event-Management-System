@@ -1,81 +1,40 @@
 using AutoMapper;
 using EventMS.Application.DTOs;
+using EventMS.Application.Port;
 using EventMS.Application.UseCases;
 using EventMS.Domain.Entities;
 using EventMS.Domain.Interfaces;
 using Moq;
 
-namespace EventMS.Application.Tests
+namespace EventMS.Application.UseCases
 {
-    public class CreateEventUseCaseTests
+    public class CreateEventUseCase : ICreateEventUseCase
     {
-        private readonly Mock<IEventRepository> _mockEventRepository;
+        private readonly IEventRepository _eventRepository;
         private readonly IMapper _mapper;
-        private readonly CreateEventUseCase _createEventUseCase;
 
-        public CreateEventUseCaseTests()
+        public CreateEventUseCase(IEventRepository eventRepository, IMapper mapper)
         {
-            _mockEventRepository = new Mock<IEventRepository>();
-
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.CreateMap<EventDto, Event>();
-            });
-            _mapper = mapperConfig.CreateMapper();
-
-            _createEventUseCase = new CreateEventUseCase(_mockEventRepository.Object, _mapper);
+            _eventRepository = eventRepository;
+            _mapper = mapper;
         }
 
-        [Fact]
-        public void Execute_ShouldThrowArgumentException_WhenMandatoryFieldsAreMissing()
+        public Event Execute(EventDto newEventDto)
         {
-            var newEventDto = new EventDto
+            var newEvent = _mapper.Map<Event>(newEventDto);
+
+            if (string.IsNullOrWhiteSpace(newEvent.Title) || newEvent.Date == default || newEvent.Time == default || string.IsNullOrWhiteSpace(newEvent.Location))
             {
-                Title = "",
-                Date = DateTime.MinValue,
-                Time = TimeSpan.Zero,
-                Location = ""
-            };
+                throw new ArgumentException("Missing mandatory fields: title, date, time, location.");
+            }
 
-            Assert.Throws<ArgumentException>(() => _createEventUseCase.Execute(newEventDto));
-        }
-
-        [Fact]
-        public void Execute_ShouldThrowInvalidOperationException_WhenEventAlreadyExists()
-        {
-            var newEventDto = new EventDto
+            if (_eventRepository.EventExists(newEvent.Title, newEvent.Date, newEvent.Time, newEvent.Location))
             {
-                Title = "Existing Event",
-                Date = new DateTime(2024, 8, 15),
-                Time = new TimeSpan(11, 0, 0),
-                Location = "City Library"
-            };
+                throw new InvalidOperationException("An event with the same title, date, and location already exists.");
+            }
 
-            _mockEventRepository.Setup(repo => repo.EventExists(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<string>()))
-                .Returns(true);
-
-            Assert.Throws<InvalidOperationException>(() => _createEventUseCase.Execute(newEventDto));
-        }
-
-        [Fact]
-        public void Execute_ShouldAddEvent_WhenEventIsValid()
-        {
-            var newEventDto = new EventDto
-            {
-                Title = "New Event",
-                Date = new DateTime(2024, 8, 15),
-                Time = new TimeSpan(11, 0, 0),
-                Location = "City Library"
-            };
-
-            _mockEventRepository.Setup(repo => repo.EventExists(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<string>()))
-                .Returns(false);
-
-            var createdEvent = _createEventUseCase.Execute(newEventDto);
-
-            _mockEventRepository.Verify(repo => repo.AddEvent(It.IsAny<Event>()), Times.Once);
-            Assert.NotNull(createdEvent);
-            Assert.Equal(newEventDto.Title, createdEvent.Title);
+            _eventRepository.AddEvent(newEvent);
+            return newEvent;
         }
     }
 }

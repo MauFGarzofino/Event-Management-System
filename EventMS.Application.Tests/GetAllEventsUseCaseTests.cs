@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace EventMS.Application.Tests
 {
@@ -22,6 +23,7 @@ namespace EventMS.Application.Tests
         {
             _mockRepository = new Mock<IEventRepository>();
             _mockMapper = new Mock<IMapper>();
+
             _useCase = new GetAllEventsUseCase(_mockRepository.Object, _mockMapper.Object);
         }
 
@@ -31,13 +33,13 @@ namespace EventMS.Application.Tests
             // Arrange
             var events = new List<Event>
             {
-                new Event { Id = 1, Title = "Event 1" },
-                new Event { Id = 2, Title = "Event 2" }
+                new Event("Event 1", "Description 1", DateTime.Now, TimeSpan.FromHours(1), "Location 1"),
+                new Event("Event 2", "Description 2", DateTime.Now, TimeSpan.FromHours(2), "Location 2")
             };
             var eventDtos = new List<EventDto>
             {
-                new EventDto { Title = "Event 1" },
-                new EventDto { Title = "Event 2" }
+                new EventDto { Title = "Event 1", Description = "Description 1", Date = DateTime.Now, Time = TimeSpan.FromHours(1), Location = "Location 1" },
+                new EventDto { Title = "Event 2", Description = "Description 2", Date = DateTime.Now, Time = TimeSpan.FromHours(2), Location = "Location 2" }
             };
 
             _mockRepository.Setup(r => r.GetAllEvents()).Returns(events);

@@ -70,31 +70,23 @@ namespace EventManagementSystemAPI.Tests
                 Location = "Test Location"
             };
 
-            var createdEvent = new Event
+            var createdEvent = new Event("New Event", "Description",newEventDto.Date, newEventDto.Time, newEventDto.Location)
             {
-                Id = 1,
-                Title = "New Event",
-                Date = newEventDto.Date,
-                Time = newEventDto.Time,
-                Location = newEventDto.Location
+                Id = 1
             };
 
             _mockCreateEventUseCase.Setup(x => x.Execute(It.IsAny<EventDto>())).Returns(createdEvent);
 
             // Act
             var result = _controller.Post(newEventDto);
-                       
+
             // Assert
             var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
-            Assert.Equal("Post", createdAtActionResult.ActionName);
-
-            
             Assert.Equal("Post", createdAtActionResult.ActionName);
             Assert.Equal(201, ((Response<Event>)createdAtActionResult.Value).Status);
             Assert.Equal("Event created successfully.", ((Response<Event>)createdAtActionResult.Value).Message);
             Assert.Null(((Response<Event>)createdAtActionResult.Value).Errors);
             Assert.Equal(createdEvent.Id, ((Response<Event>)createdAtActionResult.Value).Data.Id);
-
         }
 
         [Fact]

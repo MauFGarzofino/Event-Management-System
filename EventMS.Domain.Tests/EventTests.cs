@@ -5,21 +5,25 @@ namespace EventMS.Domain.Tests
     public class EventTests
     {
         [Fact]
-        public void CanCreateEvent_WithValidDetails()
+        public void CanAddAndRemoveTickets()
         {
-            var newEvent = new Event
-            {
-                Title = "New Event",
-                Date = new DateTime(2024, 8, 15),
-                Time = new TimeSpan(11, 0, 0),
-                Location = "City Library"
-            };
+            // Arrange
+            var newEvent = new Event("Event Title", "Event Description", new DateTime(2024, 8, 15), TimeSpan.FromHours(11), "Event Location");
+            var user = new User("userId", "User", "Surname", "user@example.com", "nickname", "role");
+            var ticket = new Ticket("12345", newEvent, user);
 
-            Assert.NotNull(newEvent);
-            Assert.Equal("New Event", newEvent.Title);
-            Assert.Equal(new DateTime(2024, 8, 15), newEvent.Date);
-            Assert.Equal(new TimeSpan(11, 0, 0), newEvent.Time);
-            Assert.Equal("City Library", newEvent.Location);
+            // Act
+            newEvent.AddTicket(ticket);
+
+            // Assert
+            Assert.Single(newEvent.Tickets);
+            Assert.Contains(ticket, newEvent.Tickets);
+
+            // Act
+            newEvent.RemoveTicket(ticket);
+
+            // Assert
+            Assert.Empty(newEvent.Tickets);
         }
     }
 }
