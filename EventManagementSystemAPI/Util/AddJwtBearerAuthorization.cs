@@ -24,7 +24,14 @@ namespace EventManagementSystemAPI.Util
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuer = configuration["Jwt:Authority"],
-                        ValidAudiences = new[] { "master-realm", "account", "ems-api" }
+                        ValidAudiences = new[] { "master-realm", "account", "ems-api" },
+                        IssuerSigningKeyResolver = (token, securityToken, kid, validationParameters) =>
+                        {
+                            var client = new HttpClient();
+                            var discoveryDocument = client.GetStringAsync($"{o.Authority}/.well-known/openid-configuration").Result;
+                            var keys = new JsonWebKeySet(discoveryDocument).GetSigningKeys();
+                            return keys;
+                        }
                     };
 
                     o.Events = new JwtBearerEvents
