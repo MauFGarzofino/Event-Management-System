@@ -14,6 +14,7 @@ namespace EventMS.Domain.Entities
         public DateTime PurchaseDate { get; private set; }
         public TicketStatus Status { get; private set; }
         public int EventId { get; private set; }
+        // TODO: Type_ticket
         public Event Event { get; private set; }
         public string UserId { get; private set; }
         public User User { get; private set; }
