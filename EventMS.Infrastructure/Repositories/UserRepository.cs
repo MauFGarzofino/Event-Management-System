@@ -24,15 +24,9 @@ namespace EventMS.Infrastructure.Repositories
             return await _context.Users.FindAsync(userId);
         }
 
-        public async Task AddUserAsync(User user)
+        public async void AddUserAsync(User user)
         {
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateUserAsync(User user)
-        {
-            _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
