@@ -14,5 +14,7 @@ namespace EventMS.Domain.Interfaces
         void UpdateEvent(Event newEvent);
         bool EventExists(string title, DateTime date, TimeSpan time, string location);
         Event GetEventById(int id);
+
+        Task<User> GetUserByIdAsync(string userId);
     }
 }
