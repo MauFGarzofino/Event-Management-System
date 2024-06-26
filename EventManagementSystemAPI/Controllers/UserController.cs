@@ -10,10 +10,12 @@ namespace EventManagementSystemAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IGetAllUsersUseCase _getAllUsersUseCase;
+        private readonly IGetUserByIdUseCase _getUserByIdUseCase;
 
-        public UserController(IGetAllUsersUseCase getAllUsersUseCase)
+        public UserController(IGetAllUsersUseCase getAllUsersUseCase, IGetUserByIdUseCase getUserByIdUseCase)
         {
             _getAllUsersUseCase = getAllUsersUseCase;
+            _getUserByIdUseCase = getUserByIdUseCase;
         }
 
         [HttpGet]
@@ -27,6 +29,26 @@ namespace EventManagementSystemAPI.Controllers
             }
 
             return Ok(users);
+        }
+
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetUserById(string userId)
+        {
+            var user = await _getUserByIdUseCase.ExecuteAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var response = new
+            {
+                userId = user.Id,
+                username = user.Nickname,
+                email = user.Email,
+                registeredAt = user.RegisteredAt
+            };
+            return Ok(response);
+
         }
     }
 }

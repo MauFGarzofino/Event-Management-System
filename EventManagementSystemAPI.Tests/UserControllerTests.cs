@@ -14,12 +14,14 @@ namespace EventManagementSystemAPI.Tests
     public class UserControllerTests
     {
         private readonly Mock<IGetAllUsersUseCase> _mockGetAllUsersUseCase;
+        private readonly Mock<IGetUserByIdUseCase> _mockGetUserByIdUseCase;
         private readonly UserController _controller;
 
         public UserControllerTests()
         {
             _mockGetAllUsersUseCase = new Mock<IGetAllUsersUseCase>();
-            _controller = new UserController(_mockGetAllUsersUseCase.Object);
+            _mockGetUserByIdUseCase = new Mock<IGetUserByIdUseCase>();
+            _controller = new UserController(_mockGetAllUsersUseCase.Object, _mockGetUserByIdUseCase.Object);
         }
 
         [Fact]

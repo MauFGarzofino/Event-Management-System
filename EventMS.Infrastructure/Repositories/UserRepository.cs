@@ -22,5 +22,10 @@ namespace EventMS.Infrastructure.Repositories
         {
             return _context.Users.ToList();
         }
+
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            return await _context.Users.FindAsync(userId);
+        }
     }
 }
