@@ -45,7 +45,6 @@ namespace EventManagementSystemAPI.Controllers
                 userId = user.Id,
                 username = user.Nickname,
                 email = user.Email,
-                registeredAt = user.RegisteredAt
             };
             return Ok(response);
 
