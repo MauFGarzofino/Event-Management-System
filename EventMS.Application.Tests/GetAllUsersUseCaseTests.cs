@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EventMS.Application.DTOs;
+using EventMS.Application.DTOs.UsersDto;
 using EventMS.Application.UseCases;
 using EventMS.Domain.Entities;
 using EventMS.Domain.Interfaces;

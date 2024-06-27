@@ -2,8 +2,10 @@
 using EventMS.Application.Port;
 using EventMS.Application.Ports;
 using EventMS.Application.UseCases;
+using EventMS.Application.UseCases.UserUseCases;
 using EventMS.Domain.Interfaces;
 using EventMS.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Hosting;
 
 namespace EventManagementSystemAPI.Util
 {
@@ -20,6 +22,7 @@ namespace EventManagementSystemAPI.Util
             services.AddScoped<IGetAllEventsUseCase, GetAllEventsUseCase>();
             services.AddScoped<ICreateEventUseCase, CreateEventUseCase>();
             services.AddScoped<IUpdateEventUseCase, UpdateEventUseCase>();
+            services.AddScoped<ICreateUserUseCase, CreateUserUseCase>();
 
             services.AddScoped<IGetAllUsersUseCase, GetAllUsersUseCase>();
             services.AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();

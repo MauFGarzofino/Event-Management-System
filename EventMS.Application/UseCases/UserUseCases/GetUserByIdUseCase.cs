@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventMS.Application.UseCases
+namespace EventMS.Application.UseCases.UserUseCases
 {
     public class GetUserByIdUseCase : IGetUserByIdUseCase
     {
