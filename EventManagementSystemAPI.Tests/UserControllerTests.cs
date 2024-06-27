@@ -1,5 +1,6 @@
 ﻿using EventManagementSystemAPI.Controllers;
 using EventMS.Application.DTOs;
+using EventMS.Application.DTOs.UsersDto;
 using EventMS.Application.Ports;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
