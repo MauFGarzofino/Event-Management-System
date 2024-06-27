@@ -11,16 +11,16 @@ namespace EventMS.Application.UseCases
 {
     public class GetUserByIdUseCase : IGetUserByIdUseCase
     {
-        private readonly IEventRepository _eventRepository;
+        private readonly IUserRepository _userRepository;
 
-        public GetUserByIdUseCase(IEventRepository eventRepository)
+        public GetUserByIdUseCase(IUserRepository userRepository)
         {
-            _eventRepository = eventRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<User> ExecuteAsync(string userId)
         {
-            return await _eventRepository.GetUserByIdAsync(userId);
+            return await _userRepository.GetUserByIdAsync(userId);
         }
 
     }

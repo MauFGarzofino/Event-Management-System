@@ -13,6 +13,7 @@ namespace EventManagementSystemAPI.MappingProfile
             CreateMap<EventDto, Event>();
             CreateMap<UpdateEventDto, Event>();
 
+            CreateMap<User, UserDto>();
         }
     }
 }

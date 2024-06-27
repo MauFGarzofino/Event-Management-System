@@ -53,9 +53,5 @@ namespace EventMS.Infrastructure.Repositories
         {
             return _context.Events.Any(e => e.Title == title && e.Date == date && e.Time == time && e.Location == location);
         }
-        public async Task<User> GetUserByIdAsync(string userId)
-        {
-            return await _context.Users.FindAsync(userId);
-        }
     }
 }

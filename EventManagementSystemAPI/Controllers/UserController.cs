@@ -1,17 +1,34 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using EventMS.Application.DTOs;
 using EventMS.Application.Ports;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+
 namespace EventManagementSystemAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("users")]
     public class UserController : ControllerBase
     {
+        private readonly IGetAllUsersUseCase _getAllUsersUseCase;
         private readonly IGetUserByIdUseCase _getUserByIdUseCase;
 
-        public UserController(IGetUserByIdUseCase getUserByIdUseCase)
+        public UserController(IGetAllUsersUseCase getAllUsersUseCase, IGetUserByIdUseCase getUserByIdUseCase)
         {
+            _getAllUsersUseCase = getAllUsersUseCase;
             _getUserByIdUseCase = getUserByIdUseCase;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var users = _getAllUsersUseCase.Execute();
+
+            if (!users.Any())
+            {
+                return NoContent();
+            }
+
+            return Ok(users);
         }
 
         [HttpGet("{userId}")]
@@ -28,7 +45,6 @@ namespace EventManagementSystemAPI.Controllers
                 userId = user.Id,
                 username = user.Nickname,
                 email = user.Email,
-                registeredAt = user.RegisteredAt
             };
             return Ok(response);
 
