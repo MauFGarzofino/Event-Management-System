@@ -9,8 +9,10 @@ namespace EventMS.Domain.Interfaces
 {
     public interface IUserRepository
     {
-        Task<User> GetUserByIdAsync(string userId);
+
         void AddUserAsync(User user);
-        
+        IEnumerable<User> GetAllUsers();
+        Task<User> GetUserByIdAsync(string userId);
+
     }
 }

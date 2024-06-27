@@ -22,6 +22,8 @@ namespace EventManagementSystemAPI.MappingProfile
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.FindFirstValue(ClaimTypes.Email)))
                 .ForMember(dest => dest.Nickname, opt => opt.MapFrom(src => src.FindFirstValue(ClaimTypes.Name) ?? src.FindFirstValue("preferred_username")))
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.FindFirstValue(ClaimTypes.Role) ?? src.Claims.FirstOrDefault(c => c.Type == "realm_access").Value));
+            CreateMap<User, UserDto>();
+
         }
     }
 }

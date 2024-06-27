@@ -1,7 +1,6 @@
 ﻿using EventMS.Domain.Entities;
 using EventMS.Domain.Interfaces;
 using EventMS.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +16,12 @@ namespace EventMS.Infrastructure.Repositories
         public UserRepository(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+
+        public IEnumerable<User> GetAllUsers()
+        {
+            return _context.Users.ToList();
         }
 
         public async Task<User> GetUserByIdAsync(string userId)
