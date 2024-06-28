@@ -12,6 +12,7 @@ namespace EventManagementSystemAPI.MappingProfile
             CreateMap<Event, EventDto>();
             CreateMap<EventDto, Event>();
             CreateMap<UpdateEventDto, Event>();
+            CreateMap<TypeTicket, TypeTicketDto>().ReverseMap();
 
             CreateMap<User, UserDto>();
         }

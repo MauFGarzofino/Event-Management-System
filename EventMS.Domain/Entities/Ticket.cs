@@ -10,27 +10,29 @@ namespace EventMS.Domain.Entities
     {
         // Propiedades
         public int Id { get; private set; }
-        public string TicketNumber { get; private set; }
         public DateTime PurchaseDate { get; private set; }
         public TicketStatus Status { get; private set; }
         public int EventId { get; private set; }
         public Event Event { get; private set; }
         public string UserId { get; private set; }
         public User User { get; private set; }
+        public int TypeTicketId { get; private set; }
+        public TypeTicket TypeTicket { get; private set; }
 
         // Constructor sin parámetros requerido por EF
         private Ticket() { }
 
         // Constructor principal
-        public Ticket(string ticketNumber, Event ev, User user)
+        public Ticket(int typeTicketId, Event ev, User user)
         {
-            TicketNumber = ticketNumber;
+            
             PurchaseDate = DateTime.Now;
             Status = TicketStatus.Purchased;
             Event = ev;
             User = user;
             EventId = ev.Id;
             UserId = user.Id;
+            TypeTicketId = typeTicketId;
         }
 
         public void MarkAsCheckedIn()
