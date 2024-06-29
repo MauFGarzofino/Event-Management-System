@@ -166,9 +166,9 @@ namespace EventManagementSystemAPI.Tests
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var returnValue = Assert.IsType<EventDto>(okResult.Value);
-            Assert.Equal(eventDto.Id, returnValue.Id);
-            Assert.Equal(eventDto.Title, returnValue.Title);
+            var responseValue = Assert.IsType<Response<EventDto>>(okResult.Value);
+            Assert.Equal(eventDto.Id, responseValue.Data.Id);
+            Assert.Equal(eventDto.Title, responseValue.Data.Title);
         }
 
         [Fact]

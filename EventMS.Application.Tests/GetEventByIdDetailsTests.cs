@@ -37,11 +37,10 @@ namespace EventMS.Application.Tests
             };
 
             var mockEventRepository = new Mock<IEventRepository>();
-            mockEventRepository.Setup(repo => repo.GetEventDetailsById(eventId))
-                               .Returns(eventEntity);
+            mockEventRepository.Setup(repo => repo.GetEventDetailsById(eventId)).Returns(eventEntity);
 
             var mockMapper = new Mock<IMapper>();
-            mockMapper.Setup(m => m.Map<EventDto>(It.IsAny<Event>())).Returns(eventDto);
+            mockMapper.Setup(m => m.Map<EventDto>(eventEntity)).Returns(eventDto);
 
             var useCase = new GetEventByIdUseCase(mockEventRepository.Object, mockMapper.Object);
 
@@ -49,13 +48,7 @@ namespace EventMS.Application.Tests
             var result = useCase.Execute(eventId);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(eventDto.Id, result.Id);
-            Assert.Equal(eventDto.Title, result.Title);
-            Assert.Equal(eventDto.Description, result.Description);
-            Assert.Equal(eventDto.Date, result.Date);
-            Assert.Equal(eventDto.Time, result.Time);
-            Assert.Equal(eventDto.Location, result.Location);
+            Assert.Equal(eventDto, result);
         }
 
         [Fact]
@@ -65,8 +58,7 @@ namespace EventMS.Application.Tests
             var eventId = 1;
 
             var mockEventRepository = new Mock<IEventRepository>();
-            mockEventRepository.Setup(repo => repo.GetEventDetailsById(eventId))
-                               .Returns((Event)null);
+            mockEventRepository.Setup(repo => repo.GetEventDetailsById(eventId)).Returns((Event)null);
 
             var mockMapper = new Mock<IMapper>();
 
