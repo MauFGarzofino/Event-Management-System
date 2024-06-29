@@ -18,6 +18,7 @@ namespace EventMS.Infrastructure.Repositories
             _context = context;
         }
 
+
         public IEnumerable<User> GetAllUsers()
         {
             return _context.Users.ToList();
@@ -27,5 +28,12 @@ namespace EventMS.Infrastructure.Repositories
         {
             return await _context.Users.FindAsync(userId);
         }
+
+        public async void AddUserAsync(User user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

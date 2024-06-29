@@ -1,15 +1,15 @@
-﻿using EventMS.Application.DTOs;
-using EventMS.Application.DTOs.UsersDto;
+﻿using EventMS.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EventMS.Application.Ports
 {
-    public interface IGetAllUsersUseCase
+    public interface ICreateUserUseCase
     {
-        IEnumerable<UserDto> Execute();
+        User Execute(ClaimsPrincipal userClaims);
     }
 }
