@@ -42,8 +42,8 @@ namespace EventManagementSystemAPI.Tests
             // Arrange
             var eventDtos = new List<EventDto>
             {
-                new EventDto { Title = "Event 1" },
-                new EventDto { Title = "Event 2" }
+                new EventDto { Id = 1, Title = "Event 1", Date = DateTime.Now, Time = TimeSpan.FromHours(1), Location = "Location 1" },
+                new EventDto { Id = 2, Title = "Event 2", Date = DateTime.Now, Time = TimeSpan.FromHours(2), Location = "Location 2" }
             };
             _mockGetAllEventsUseCase.Setup(u => u.Execute()).Returns(eventDtos);
 
@@ -55,6 +55,7 @@ namespace EventManagementSystemAPI.Tests
             var returnValue = Assert.IsType<List<EventDto>>(okResult.Value);
             Assert.Equal(2, returnValue.Count);
         }
+
 
         [Fact]
         public void Get_ShouldReturnNoContent_WhenNoEventsExist()
@@ -142,6 +143,32 @@ namespace EventManagementSystemAPI.Tests
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, notFoundResult.StatusCode);
+        }
+
+        [Fact]
+        public void GetEventById_ShouldReturnOkResult_WhenEventExists()
+        {
+            // Arrange
+            var eventId = 1;
+            var eventDto = new EventDto
+            {
+                Id = eventId,
+                Title = "Sample Event",
+                Description = "This is a test event",
+                Date = DateTime.Today,
+                Time = TimeSpan.FromHours(10),
+                Location = "Sample Location"
+            };
+            _mockGetEventByIdUseCase.Setup(u => u.Execute(eventId)).Returns(eventDto);
+
+            // Act
+            var result = _controller.GetEventById(eventId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnValue = Assert.IsType<EventDto>(okResult.Value);
+            Assert.Equal(eventDto.Id, returnValue.Id);
+            Assert.Equal(eventDto.Title, returnValue.Title);
         }
 
         [Fact]

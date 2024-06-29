@@ -15,23 +15,23 @@ namespace EventMS.Application.UseCases
     public class GetEventByIdUseCase : IGetEventByIdUseCase
     {
         private readonly IEventRepository _eventRepository;
-        private readonly IMapper _mapper; 
+        private readonly IMapper _mapper;
 
         public GetEventByIdUseCase(IEventRepository eventRepository, IMapper mapper)
         {
-            _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper)); 
+            _eventRepository = eventRepository;
+            _mapper = mapper;
         }
 
         public EventDto Execute(int id)
         {
-            var eventEntity = _eventRepository.GetEventById(id);
+            var eventEntity = _eventRepository.GetEventDetailsById(id);
             if (eventEntity == null)
+            {
                 throw new KeyNotFoundException($"Event with id '{id}' not found.");
+            }
 
-            var eventDto = _mapper.Map<EventDto>(eventEntity);
-
-            return eventDto;
+            return _mapper.Map<EventDto>(eventEntity);
         }
     }
 }

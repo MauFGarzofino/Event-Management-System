@@ -14,13 +14,18 @@ using System.Threading.Tasks;
 
 namespace EventMS.Application.Tests
 {
-    public class GetEventByIdDetailsTests
+    ppublic class GetEventByIdDetailsTests
     {
         [Fact]
         public void Execute_ShouldReturnEvent_WhenEventExists()
         {
             // Arrange
             var eventId = 1;
+            var eventEntity = new Event("Sample Event", "This is a test event", DateTime.Today, TimeSpan.FromHours(10), "Sample Location")
+            {
+                Id = eventId
+            };
+
             var eventDto = new EventDto
             {
                 Id = eventId,
@@ -33,7 +38,7 @@ namespace EventMS.Application.Tests
 
             var mockEventRepository = new Mock<IEventRepository>();
             mockEventRepository.Setup(repo => repo.GetEventDetailsById(eventId))
-                               .Returns(new Event(eventDto.Title, eventDto.Description, eventDto.Date, eventDto.Time, eventDto.Location) { Id = eventDto.Id });
+                               .Returns(eventEntity);
 
             var mockMapper = new Mock<IMapper>();
             mockMapper.Setup(m => m.Map<EventDto>(It.IsAny<Event>())).Returns(eventDto);
@@ -68,7 +73,8 @@ namespace EventMS.Application.Tests
             var useCase = new GetEventByIdUseCase(mockEventRepository.Object, mockMapper.Object);
 
             // Act & Assert
-            Assert.Throws<KeyNotFoundException>(() => useCase.Execute(eventId));
+            var exception = Assert.Throws<KeyNotFoundException>(() => useCase.Execute(eventId));
+            Assert.Equal($"Event with id '{eventId}' not found.", exception.Message);
         }
     }
 }
