@@ -27,8 +27,14 @@ namespace EventMS.Application.UseCases.UserUseCases
         public User Execute(ClaimsPrincipal userClaims)
         {
             var userDto = _mapper.Map<UserDto>(userClaims);
-        
-            var newUser = new User(userDto.Id, userDto.Name, userDto.Surname, userDto.Email, userDto.Nickname, userDto.Role);
+
+
+            if (_userRepository.GetUserByIdAsync(userDto.Id) != null)
+            {
+                return _mapper.Map<User>(userDto);
+            }
+
+            var newUser = _mapper.Map<User>(userDto);
 
             _userRepository.AddUserAsync(newUser);
             return newUser;
