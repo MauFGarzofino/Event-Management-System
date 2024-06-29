@@ -42,8 +42,8 @@ namespace EventManagementSystemAPI.Tests
             // Arrange
             var eventDtos = new List<EventDto>
             {
-                new EventDto { Id = 1, Title = "Event 1", Date = DateTime.Now, Time = TimeSpan.FromHours(1), Location = "Location 1" },
-                new EventDto { Id = 2, Title = "Event 2", Date = DateTime.Now, Time = TimeSpan.FromHours(2), Location = "Location 2" }
+                new EventDto { Id = 1, Title = "Event 1" },
+                new EventDto { Id = 2, Title = "Event 2" }
             };
             _mockGetAllEventsUseCase.Setup(u => u.Execute()).Returns(eventDtos);
 
@@ -96,10 +96,11 @@ namespace EventManagementSystemAPI.Tests
             // Assert
             var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
             Assert.Equal("Post", createdAtActionResult.ActionName);
-            Assert.Equal(201, ((Response<Event>)createdAtActionResult.Value).Status);
-            Assert.Equal("Event created successfully.", ((Response<Event>)createdAtActionResult.Value).Message);
-            Assert.Null(((Response<Event>)createdAtActionResult.Value).Errors);
-            Assert.Equal(createdEvent.Id, ((Response<Event>)createdAtActionResult.Value).Data.Id);
+            var response = Assert.IsType<Response<Event>>(createdAtActionResult.Value);
+            Assert.Equal(201, response.Status);
+            Assert.Equal("Event created successfully.", response.Message);
+            Assert.Null(response.Errors);
+            Assert.Equal(createdEvent.Id, response.Data.Id);
         }
 
         [Fact]
@@ -146,10 +147,25 @@ namespace EventManagementSystemAPI.Tests
         }
 
         [Fact]
+        public void GetEventById_ShouldReturnNotFound_WhenEventDoesNotExist()
+        {
+            // Arrange
+            int eventId = 1;
+            _mockGetEventByIdUseCase.Setup(u => u.Execute(eventId)).Throws(new KeyNotFoundException());
+
+            // Act
+            var result = _controller.GetEventById(eventId);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal(404, notFoundResult.StatusCode);
+        }
+
+        [Fact]
         public void GetEventById_ShouldReturnOkResult_WhenEventExists()
         {
             // Arrange
-            var eventId = 1;
+            int eventId = 1;
             var eventDto = new EventDto
             {
                 Id = eventId,
@@ -166,24 +182,8 @@ namespace EventManagementSystemAPI.Tests
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var responseValue = Assert.IsType<Response<EventDto>>(okResult.Value);
-            Assert.Equal(eventDto.Id, responseValue.Data.Id);
-            Assert.Equal(eventDto.Title, responseValue.Data.Title);
-        }
-
-        [Fact]
-        public void GetEventById_ShouldReturnNotFound_WhenEventDoesNotExist()
-        {
-            // Arrange
-            int eventId = 1;
-            _mockGetEventByIdUseCase.Setup(u => u.Execute(eventId)).Throws(new KeyNotFoundException());
-
-            // Act
-            var result = _controller.GetEventById(eventId);
-
-            // Assert
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal(404, notFoundResult.StatusCode);
+            var returnValue = Assert.IsType<Response<EventDto>>(okResult.Value);
+            Assert.Equal(eventDto, returnValue.Data);
         }
 
     }
