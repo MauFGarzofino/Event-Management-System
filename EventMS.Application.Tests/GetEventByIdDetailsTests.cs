@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace EventMS.Application.Tests
 {
-    ppublic class GetEventByIdDetailsTests
+    public class GetEventByIdDetailsTests
     {
         [Fact]
         public void Execute_ShouldReturnEvent_WhenEventExists()
