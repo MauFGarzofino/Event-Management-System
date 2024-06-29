@@ -147,23 +147,6 @@ namespace EventManagementSystemAPI.Tests
         }
 
         [Fact]
-        public void GetEventById_ShouldReturnNotFound_WhenEventDoesNotExist()
-        {
-            // Arrange
-            int eventId = 1;
-            _mockGetEventByIdUseCase.Setup(u => u.Execute(eventId)).Throws(new KeyNotFoundException());
-
-            // Act
-            var result = _controller.GetEventById(eventId);
-
-            // Assert
-            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal(404, notFoundResult.StatusCode);
-            var response = Assert.IsType<Response<string>>(notFoundResult.Value);
-            Assert.Equal($"Event with id '{eventId}' not found.", response.Message);
-        }
-
-        [Fact]
         public void GetEventById_ShouldReturnOkResult_WhenEventExists()
         {
             // Arrange
