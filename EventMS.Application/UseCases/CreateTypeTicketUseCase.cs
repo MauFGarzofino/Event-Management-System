@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace EventMS.Application.UseCases
 {
-    internal class CreateTypeTicketUseCase : ICreateTypeTicketUseCase
+     class CreateTypeTicketUseCase : ICreateTypeTicketUseCase
     {
         private readonly ITypeTicketRepository _typeTicketRepository;
         private readonly IMapper _mapper;

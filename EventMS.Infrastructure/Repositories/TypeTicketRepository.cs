@@ -38,5 +38,19 @@ namespace EventMS.Infrastructure.Repositories
             _context.TypeTickets.Update(typeTicket);
             _context.SaveChanges();
         }
+
+        public void DeleteTicketsByEventId(int eventId)
+        {
+            var ticketsToDelete = _context.TypeTickets
+                .Where(tt => tt.Tickets.Any(t => t.EventId == eventId))
+                .ToList();
+
+            foreach (var typeTicket in ticketsToDelete)
+            {
+                _context.TypeTickets.Remove(typeTicket);
+            }
+
+            _context.SaveChanges();
+        }
     }
 }
