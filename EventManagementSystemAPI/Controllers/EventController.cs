@@ -25,17 +25,20 @@ namespace EventManagementSystemAPI.Controllers
         private readonly ICreateEventUseCase _createEventUseCase;
         private readonly IUpdateEventUseCase _updateEventUseCase;
         private readonly IDeleteEventUseCase _deleteEventUseCase;
+        private readonly IGetEventByIdUseCase _getEventByIdUseCase;
 
         public EventController(
             IGetAllEventsUseCase getAllEventsUseCase,
             ICreateEventUseCase createEventUseCase,
             IUpdateEventUseCase updateEventUseCase,
-            IDeleteEventUseCase deleteEventUseCase)
+            IDeleteEventUseCase deleteEventUseCase,
+            IGetEventByIdUseCase getEventByIdUseCase)
         {
             _getAllEventsUseCase = getAllEventsUseCase;
             _createEventUseCase = createEventUseCase;
             _updateEventUseCase = updateEventUseCase;
             _deleteEventUseCase = deleteEventUseCase;
+            _getEventByIdUseCase = getEventByIdUseCase;
         }
 
         [Authorize(Policy = ApiPolicies.UserClientRole)]
@@ -171,5 +174,36 @@ namespace EventManagementSystemAPI.Controllers
             }
         }
 
+        [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
+        [HttpGet("{id}")]
+        public IActionResult GetEventById(int id)
+        {
+            try
+            {
+                var eventDto = _getEventByIdUseCase.Execute(id);
+                if (eventDto == null)
+                {
+                    return NotFound(new Response<string>(
+                        404,
+                        "Event not found",
+                        null
+                    ));
+                }
+
+                return Ok(new Response<EventDto>(
+                    200,
+                    "Event details retrieved successfully",
+                    eventDto
+                ));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response<string>(
+                    500,
+                    ex.Message,
+                    null
+                ));
+            }
+        }
     }
 }
