@@ -10,44 +10,25 @@ namespace EventMS.Domain.Entities
     {
         // Propiedades
         public int Id { get; private set; }
-        public string TicketNumber { get; private set; }
         public DateTime PurchaseDate { get; private set; }
-        public TicketStatus Status { get; private set; }
         public int EventId { get; private set; }
-        // TODO: Type_ticket
         public Event Event { get; private set; }
         public string UserId { get; private set; }
         public User User { get; private set; }
+        public int TypeTicketId { get; private set; }
+        public TypeTicket TypeTicket { get; private set; }
 
-        // Constructor sin parámetros requerido por EF
         private Ticket() { }
 
-        // Constructor principal
-        public Ticket(string ticketNumber, Event ev, User user)
+        public Ticket(Event ev, User user, TypeTicket typeTicket)
         {
-            TicketNumber = ticketNumber;
             PurchaseDate = DateTime.Now;
-            Status = TicketStatus.Purchased;
-            Event = ev;
-            User = user;
+            Event = ev ?? throw new ArgumentNullException(nameof(ev));
+            User = user ?? throw new ArgumentNullException(nameof(user));
+            TypeTicket = typeTicket ?? throw new ArgumentNullException(nameof(typeTicket));
             EventId = ev.Id;
             UserId = user.Id;
+            TypeTicketId = typeTicket.Id;
         }
-
-        public void MarkAsCheckedIn()
-        {
-            if (Status != TicketStatus.Purchased)
-            {
-                throw new InvalidOperationException("Only purchased tickets can be checked in.");
-            }
-            Status = TicketStatus.CheckedIn;
-        }
-    }
-
-    public enum TicketStatus
-    {
-        Purchased,
-        CheckedIn,
-        Cancelled
     }
 }
