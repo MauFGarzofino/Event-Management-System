@@ -17,6 +17,7 @@ namespace EventManagementSystemAPI.Tests
         private readonly Mock<ICreateEventUseCase> _mockCreateEventUseCase;
         private readonly Mock<IUpdateEventUseCase> _mockUpdateEventUseCase;
         private readonly Mock<IDeleteEventUseCase> _mockDeleteEventUseCase;
+        private readonly Mock<IGetEventByIdUseCase> _mockGetEventByIdUseCase;
         private readonly EventController _controller;
 
         public EventControllerTests()
@@ -25,11 +26,13 @@ namespace EventManagementSystemAPI.Tests
             _mockCreateEventUseCase = new Mock<ICreateEventUseCase>();
             _mockUpdateEventUseCase = new Mock<IUpdateEventUseCase>();
             _mockDeleteEventUseCase = new Mock<IDeleteEventUseCase>();
+            _mockGetEventByIdUseCase = new Mock<IGetEventByIdUseCase>();
             _controller = new EventController(
                 _mockGetAllEventsUseCase.Object,
                 _mockCreateEventUseCase.Object,
                 _mockUpdateEventUseCase.Object,
-                _mockDeleteEventUseCase.Object
+                _mockDeleteEventUseCase.Object,
+                _mockGetEventByIdUseCase.Object
               );
         }
 
@@ -39,8 +42,8 @@ namespace EventManagementSystemAPI.Tests
             // Arrange
             var eventDtos = new List<EventDto>
             {
-                new EventDto { Title = "Event 1" },
-                new EventDto { Title = "Event 2" }
+                new EventDto { Id = 1, Title = "Event 1" },
+                new EventDto { Id = 2, Title = "Event 2" }
             };
             _mockGetAllEventsUseCase.Setup(u => u.Execute()).Returns(eventDtos);
 
@@ -52,6 +55,7 @@ namespace EventManagementSystemAPI.Tests
             var returnValue = Assert.IsType<List<EventDto>>(okResult.Value);
             Assert.Equal(2, returnValue.Count);
         }
+
 
         [Fact]
         public void Get_ShouldReturnNoContent_WhenNoEventsExist()
@@ -92,10 +96,11 @@ namespace EventManagementSystemAPI.Tests
             // Assert
             var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
             Assert.Equal("Post", createdAtActionResult.ActionName);
-            Assert.Equal(201, ((Response<Event>)createdAtActionResult.Value).Status);
-            Assert.Equal("Event created successfully.", ((Response<Event>)createdAtActionResult.Value).Message);
-            Assert.Null(((Response<Event>)createdAtActionResult.Value).Errors);
-            Assert.Equal(createdEvent.Id, ((Response<Event>)createdAtActionResult.Value).Data.Id);
+            var response = Assert.IsType<Response<Event>>(createdAtActionResult.Value);
+            Assert.Equal(201, response.Status);
+            Assert.Equal("Event created successfully.", response.Message);
+            Assert.Null(response.Errors);
+            Assert.Equal(createdEvent.Id, response.Data.Id);
         }
 
         [Fact]
@@ -140,5 +145,31 @@ namespace EventManagementSystemAPI.Tests
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, notFoundResult.StatusCode);
         }
+
+        [Fact]
+        public void GetEventById_ShouldReturnOkResult_WhenEventExists()
+        {
+            // Arrange
+            int eventId = 1;
+            var eventDto = new EventDto
+            {
+                Id = eventId,
+                Title = "Sample Event",
+                Description = "This is a test event",
+                Date = DateTime.Today,
+                Time = TimeSpan.FromHours(10),
+                Location = "Sample Location"
+            };
+            _mockGetEventByIdUseCase.Setup(u => u.Execute(eventId)).Returns(eventDto);
+
+            // Act
+            var result = _controller.GetEventById(eventId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var returnValue = Assert.IsType<Response<EventDto>>(okResult.Value);
+            Assert.Equal(eventDto, returnValue.Data);
+        }
+
     }
 }
