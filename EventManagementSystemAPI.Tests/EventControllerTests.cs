@@ -159,6 +159,8 @@ namespace EventManagementSystemAPI.Tests
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, notFoundResult.StatusCode);
+            var response = Assert.IsType<Response<string>>(notFoundResult.Value);
+            Assert.Equal($"Event with id '{eventId}' not found.", response.Message);
         }
 
         [Fact]
