@@ -3,9 +3,11 @@ using EventManagementSystemAPI.Models;
 using EventMS.Application.DTOs;
 using EventMS.Application.Port;
 using EventMS.Application.Ports;
+using EventMS.Application.UseCases;
 using EventMS.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Xunit;
 
 namespace EventManagementSystemAPI.Tests
 {
@@ -14,6 +16,7 @@ namespace EventManagementSystemAPI.Tests
         private readonly Mock<IGetAllEventsUseCase> _mockGetAllEventsUseCase;
         private readonly Mock<ICreateEventUseCase> _mockCreateEventUseCase;
         private readonly Mock<IUpdateEventUseCase> _mockUpdateEventUseCase;
+        private readonly Mock<IDeleteEventUseCase> _mockDeleteEventUseCase;
         private readonly EventController _controller;
 
         public EventControllerTests()
@@ -21,7 +24,13 @@ namespace EventManagementSystemAPI.Tests
             _mockGetAllEventsUseCase = new Mock<IGetAllEventsUseCase>();
             _mockCreateEventUseCase = new Mock<ICreateEventUseCase>();
             _mockUpdateEventUseCase = new Mock<IUpdateEventUseCase>();
-            _controller = new EventController(_mockGetAllEventsUseCase.Object, _mockCreateEventUseCase.Object, _mockUpdateEventUseCase.Object);
+            _mockDeleteEventUseCase = new Mock<IDeleteEventUseCase>();
+            _controller = new EventController(
+                _mockGetAllEventsUseCase.Object,
+                _mockCreateEventUseCase.Object,
+                _mockUpdateEventUseCase.Object,
+                _mockDeleteEventUseCase.Object
+              );
         }
 
         [Fact]
@@ -101,6 +110,35 @@ namespace EventManagementSystemAPI.Tests
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.IsType<SerializableError>(badRequestResult.Value);
+        }
+
+        [Fact]
+        public void Delete_ShouldReturnNoContent_WhenEventIsDeleted()
+        {
+            // Arrange
+            var eventId = 1;
+            _mockDeleteEventUseCase.Setup(x => x.Execute(eventId));
+
+            // Act
+            var result = _controller.Delete(eventId);
+
+            // Assert
+            Assert.IsType<NoContentResult>(result);
+        }
+
+        [Fact]
+        public void Delete_ShouldReturnNotFound_WhenEventDoesNotExist()
+        {
+            // Arrange
+            var eventId = 1;
+            _mockDeleteEventUseCase.Setup(x => x.Execute(eventId)).Throws(new KeyNotFoundException());
+
+            // Act
+            var result = _controller.Delete(eventId);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal(404, notFoundResult.StatusCode);
         }
     }
 }

@@ -24,12 +24,18 @@ namespace EventManagementSystemAPI.Controllers
         private readonly IGetAllEventsUseCase _getAllEventsUseCase;
         private readonly ICreateEventUseCase _createEventUseCase;
         private readonly IUpdateEventUseCase _updateEventUseCase;
+        private readonly IDeleteEventUseCase _deleteEventUseCase;
 
-        public EventController(IGetAllEventsUseCase getAllEventsUseCase, ICreateEventUseCase createEventUseCase, IUpdateEventUseCase updateEventUseCase)
+        public EventController(
+            IGetAllEventsUseCase getAllEventsUseCase,
+            ICreateEventUseCase createEventUseCase,
+            IUpdateEventUseCase updateEventUseCase,
+            IDeleteEventUseCase deleteEventUseCase)
         {
             _getAllEventsUseCase = getAllEventsUseCase;
             _createEventUseCase = createEventUseCase;
             _updateEventUseCase = updateEventUseCase;
+            _deleteEventUseCase = deleteEventUseCase;
         }
 
         [Authorize(Policy = ApiPolicies.UserClientRole)]
@@ -140,6 +146,25 @@ namespace EventManagementSystemAPI.Controllers
             {
                 return Conflict(new Response<string>(
                     409,
+                    ex.Message,
+                    null
+                ));
+            }
+        }
+
+        [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _deleteEventUseCase.Execute(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new Response<string>(
+                    404,
                     ex.Message,
                     null
                 ));
