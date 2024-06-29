@@ -53,5 +53,15 @@ namespace EventMS.Infrastructure.Repositories
         {
             return _context.Events.Any(e => e.Title == title && e.Date == date && e.Time == time && e.Location == location);
         }
+
+        public void DeleteEvent(int id)
+        {
+            var eventToDelete = _context.Events.Include(e => e.Tickets).FirstOrDefault(e => e.Id == id);
+            if (eventToDelete != null)
+            {
+                _context.Events.Remove(eventToDelete);
+                _context.SaveChanges();
+            }
+        }
     }
 }
