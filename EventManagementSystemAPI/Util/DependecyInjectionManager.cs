@@ -28,6 +28,10 @@ namespace EventManagementSystemAPI.Util
 
             services.AddScoped<IGetAllUsersUseCase, GetAllUsersUseCase>();
             services.AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
+
+            
+            services.AddScoped<ITypeTicketRepository, TypeTicketRepository>();
+            services.AddScoped<IDeleteTicketsByIdUseCase, DeleteTicketsByIdUseCase>();
         }
 
     }

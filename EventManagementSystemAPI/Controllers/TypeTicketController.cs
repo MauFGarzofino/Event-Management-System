@@ -16,10 +16,14 @@ namespace EventManagementSystemAPI.Controllers
     public class TypeTicketController : ControllerBase
     {
         private readonly ICreateTypeTicketUseCase _createTypeTicketUseCase;
+        private readonly IDeleteTicketsByIdUseCase _deleteTicketsUseCase;
 
-        public TypeTicketController(ICreateTypeTicketUseCase createTypeTicketUseCase)
+        public TypeTicketController(
+            ICreateTypeTicketUseCase createTypeTicketUseCase,
+            IDeleteTicketsByIdUseCase deleteTicketsUseCase)
         {
             _createTypeTicketUseCase = createTypeTicketUseCase;
+            _deleteTicketsUseCase = deleteTicketsUseCase;
         }
 
         [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
@@ -66,6 +70,22 @@ namespace EventManagementSystemAPI.Controllers
             }
 
         }
+
+        [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
+        [HttpDelete("{eventId}/tickets")]
+        public IActionResult DeleteTicketsByEventId(int eventId)
+        {
+            try
+            {
+                _deleteTicketsUseCase.Execute(eventId);
+                return NoContent(); // 204 No Content
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error al eliminar tickets.", error = ex.Message });
+            }
+        }
+
     }
 
 }
