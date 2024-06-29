@@ -17,6 +17,7 @@ namespace EventManagementSystemAPI.Tests
         private readonly Mock<ICreateEventUseCase> _mockCreateEventUseCase;
         private readonly Mock<IUpdateEventUseCase> _mockUpdateEventUseCase;
         private readonly Mock<IDeleteEventUseCase> _mockDeleteEventUseCase;
+        private readonly Mock<IGetEventByIdUseCase> _mockGetEventByIdUseCase;
         private readonly EventController _controller;
 
         public EventControllerTests()
@@ -25,11 +26,13 @@ namespace EventManagementSystemAPI.Tests
             _mockCreateEventUseCase = new Mock<ICreateEventUseCase>();
             _mockUpdateEventUseCase = new Mock<IUpdateEventUseCase>();
             _mockDeleteEventUseCase = new Mock<IDeleteEventUseCase>();
+            _mockGetEventByIdUseCase = new Mock<IGetEventByIdUseCase>();
             _controller = new EventController(
                 _mockGetAllEventsUseCase.Object,
                 _mockCreateEventUseCase.Object,
                 _mockUpdateEventUseCase.Object,
-                _mockDeleteEventUseCase.Object
+                _mockDeleteEventUseCase.Object,
+                _mockGetEventByIdUseCase.Object
               );
         }
 
@@ -140,5 +143,21 @@ namespace EventManagementSystemAPI.Tests
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal(404, notFoundResult.StatusCode);
         }
+
+        [Fact]
+        public void GetEventById_ShouldReturnNotFound_WhenEventDoesNotExist()
+        {
+            // Arrange
+            int eventId = 1;
+            _mockGetEventByIdUseCase.Setup(u => u.Execute(eventId)).Throws(new KeyNotFoundException());
+
+            // Act
+            var result = _controller.GetEventById(eventId);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal(404, notFoundResult.StatusCode);
+        }
+
     }
 }

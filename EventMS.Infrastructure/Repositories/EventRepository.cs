@@ -63,5 +63,10 @@ namespace EventMS.Infrastructure.Repositories
                 _context.SaveChanges();
             }
         }
+
+        public Event GetEventDetailsById(int id)
+        {
+            return _context.Events.FirstOrDefault(e => e.Id == id);
+        }
     }
 }
