@@ -15,10 +15,10 @@ namespace EventMS.Domain.Entities
         public int EventId { get;  set; }
         [JsonIgnore]
         public Event Event { get; private set; }
-        public string UserId { get; private set; }
+        public string UserId { get;  set; }
         [JsonIgnore]
         public User User { get; private set; }
-        public int TypeTicketId { get; private set; }
+        public int TypeTicketId { get;  set; }
         [JsonIgnore]
         public TypeTicket TypeTicket { get; private set; }
 

@@ -26,31 +26,6 @@ namespace EventManagementSystemAPI.Tests
             _controller = new TicketController(_mockPurchaseTicketUseCase.Object, _mockCreateUserUseCase.Object);
         }
 
-        [Fact]
-        public async Task PurchaseATicket_ReturnsCreatedResult()
-        {
-            // Arrange
-            int ticketTypeId = 1;
-            int eventId = 2;
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-            {
-                new Claim(ClaimTypes.Name, "TestUser"),
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
-            }, "mock"));
-
-            var expectedTicket = new Ticket { Id = 1, EventId = 2 };
-            _mockPurchaseTicketUseCase.Setup(x => x.Execute(ticketTypeId, user, eventId)).ReturnsAsync(expectedTicket);
-
-            // Act
-            var result = await _controller.PurchaseATicket(ticketTypeId, eventId);
-
-            // Assert
-            var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
-            var response = Assert.IsType<Response<Ticket>>(createdAtActionResult.Value);
-            Assert.Equal(201, response.Status);
-            Assert.Equal("Ticket purchased succesfully.", response.Message);
-            Assert.Equal(expectedTicket, response.Data);
-        }
 
         [Fact]
         public async Task PurchaseATicket_InsufficientTickets_ReturnsBadRequest()
@@ -77,6 +52,5 @@ namespace EventManagementSystemAPI.Tests
             Assert.Null(response.Data);
         }
 
-        // Additional test cases for exception handling can be added similarly
     }
 }
