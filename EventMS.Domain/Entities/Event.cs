@@ -28,12 +28,14 @@ namespace EventMS.Domain.Entities
             _time = time;
             _location = location;
             _tickets = new List<Ticket>();
+            EventRegistrations = new List<EventRegistration>();
         }
 
         // Constructor sin parámetros requerido por EF
         private Event()
         {
             _tickets = new List<Ticket>();
+            EventRegistrations = new List<EventRegistration>();
         }
 
         public int Id { get; set; }
@@ -43,6 +45,7 @@ namespace EventMS.Domain.Entities
         public TimeSpan Time { get; private set; }
         public string Location => _location;
         public IReadOnlyCollection<Ticket> Tickets => _tickets.AsReadOnly();
+        public ICollection<EventRegistration> EventRegistrations { get; private set; }
 
         public void UpdateDetails(string title, string description, DateTime date, TimeSpan time, string location)
         {
