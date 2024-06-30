@@ -9,10 +9,10 @@ namespace EventMS.Domain.Interfaces
 {
     public interface ITicketRepository
     {
-        IEnumerable<Ticket> GetAllTickets();
-        void AddTicket(Ticket newTicket);
-        //void UpdateTicket(Ticket updatedTicket);
-        Ticket GetTicketById(int id);
-        bool TicketExists(int id);
+        Task<IEnumerable<Ticket>> GetAllTickets();
+        Task AddTicket(Ticket newTicket);
+        Task<Ticket> GetTicketById(int id);
+        Task<bool> TicketExists(int id);
     }
+
 }

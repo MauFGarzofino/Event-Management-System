@@ -10,6 +10,6 @@ namespace EventMS.Application.Ports
 {
     public interface ICreateUserUseCase
     {
-        User Execute(ClaimsPrincipal userClaims);
+        Task<User> Execute(ClaimsPrincipal userClaims);
     }
 }

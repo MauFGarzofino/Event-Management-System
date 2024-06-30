@@ -10,9 +10,9 @@ namespace EventMS.Domain.Interfaces
     public interface ITypeTicketRepository
     {
         IEnumerable<TypeTicket> GetAllTypeTickets();
-        TypeTicket GetTypeTicketById(int id);
+        Task<TypeTicket> GetTypeTicketById(int id);
         void AddTypeTicket(TypeTicket typeTicket);
-        void UpdateTypeTicket(TypeTicket typeTicket);
+        Task UpdateTypeTicket(TypeTicket typeTicket);
         IEnumerable<TypeTicketCount> GetTicketTypeCounts(int eventId);
     }
 }

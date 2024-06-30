@@ -15,14 +15,12 @@ namespace EventManagementSystemAPI.Controllers
         private readonly IGetAllUsersUseCase _getAllUsersUseCase;
         private readonly IGetUserByIdUseCase _getUserByIdUseCase;
         private readonly ICreateUserUseCase _createUserUseCase;
-        private readonly IPurchaseTicketUseCase _purchaseTicketUseCase;
 
-        public UserController(IGetAllUsersUseCase getAllUsersUseCase, IGetUserByIdUseCase getUserByIdUseCase, ICreateUserUseCase createUserUseCase, IPurchaseTicketUseCase purchaseTicketUseCase)
+        public UserController(IGetAllUsersUseCase getAllUsersUseCase, IGetUserByIdUseCase getUserByIdUseCase)
         {
             _getAllUsersUseCase = getAllUsersUseCase;
             _getUserByIdUseCase = getUserByIdUseCase;
-            _createUserUseCase = createUserUseCase;
-            _purchaseTicketUseCase = purchaseTicketUseCase;
+            
         }
 
         [HttpGet]

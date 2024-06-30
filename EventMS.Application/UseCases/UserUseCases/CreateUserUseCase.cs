@@ -24,19 +24,21 @@ namespace EventMS.Application.UseCases.UserUseCases
             _userRepository = userRepository;
         }
 
-        public User Execute(ClaimsPrincipal userClaims)
+        public async Task<User> Execute(ClaimsPrincipal userClaims)
         {
             var userDto = _mapper.Map<UserDto>(userClaims);
 
 
-            if (_userRepository.GetUserByIdAsync(userDto.Id) != null)
+            if (await _userRepository.GetUserByIdAsync(userDto.Id) != null)
             {
                 return _mapper.Map<User>(userDto);
             }
 
-            var newUser = _mapper.Map<User>(userDto);
+            var newUser = new User(userDto.Id, userDto.Name, userDto.Surname, userDto.Email, userDto.Nickname, userDto.Role);
 
-            _userRepository.AddUserAsync(newUser);
+            //var newUser = _mapper.Map<User>(userDto);
+
+            await _userRepository.AddUserAsync(newUser);
             return newUser;
         }
 
