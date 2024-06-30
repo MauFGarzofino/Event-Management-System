@@ -1,11 +1,11 @@
 ﻿using EventManagementSystemAPI.Filters.validations;
 using EventMS.Application.DTOs.Tickets;
-using EventMS.Application.Ports;
 using EventMS.Domain.Entities;
 using EventMS.Infrastructure.Auth.TokenManagement;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using EventManagementSystemAPI.Models;
+using EventMS.Application.Ports.Ticket;
 
 
 namespace EventManagementSystemAPI.Controllers
@@ -16,10 +16,14 @@ namespace EventManagementSystemAPI.Controllers
     public class TypeTicketController : ControllerBase
     {
         private readonly ICreateTypeTicketUseCase _createTypeTicketUseCase;
+        private readonly IGetTicketTypeCountsUseCase _getTicketTypeCountsUseCase;
 
-        public TypeTicketController(ICreateTypeTicketUseCase createTypeTicketUseCase)
+        public TypeTicketController
+            (ICreateTypeTicketUseCase createTypeTicketUseCase,
+            IGetTicketTypeCountsUseCase getTicketTypeCountsUseCase)
         {
             _createTypeTicketUseCase = createTypeTicketUseCase;
+            _getTicketTypeCountsUseCase = getTicketTypeCountsUseCase;
         }
 
         [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
@@ -66,6 +70,27 @@ namespace EventManagementSystemAPI.Controllers
             }
 
         }
-    }
 
+        [Authorize(Policy = "OrganizerClientRole")]
+        [HttpGet("{eventId}/ticket-types/count")]
+        public IActionResult GetTicketTypeCounts(int eventId)
+        {
+            var ticketTypeCounts = _getTicketTypeCountsUseCase.Execute(eventId);
+
+            if (!ticketTypeCounts.Any())
+            {
+                return NotFound(new Response<string>(
+                    404,
+                    "No ticket types found for the specified event.",
+                    null
+                ));
+            }
+
+            return Ok(new Response<IEnumerable<TicketTypeCountDto>>(
+                200,
+                "Ticket type counts retrieved successfully.",
+                ticketTypeCounts
+            ));
+        }
+    }
 }

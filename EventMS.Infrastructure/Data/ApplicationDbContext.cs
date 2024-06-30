@@ -17,6 +17,7 @@ namespace EventMS.Infrastructure.Data
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<TypeTicket> TypeTickets { get; set; }
+        public DbSet<EventRegistration> EventRegistrations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +27,7 @@ namespace EventMS.Infrastructure.Data
             modelBuilder.Entity<Ticket>(ConfigureTicket);
             modelBuilder.Entity<User>(ConfigureUser);
             modelBuilder.Entity<TypeTicket>(ConfigureTypeTicket);
+            modelBuilder.Entity<EventRegistration>(ConfigureEventRegistration);
         }
 
         private void ConfigureEvent(EntityTypeBuilder<Event> builder)
@@ -78,12 +80,24 @@ namespace EventMS.Infrastructure.Data
             builder.Property(tt => tt.Description).IsRequired();
             builder.Property(tt => tt.Price)
                    .IsRequired()
-                   .HasColumnType("decimal(18,2)"); // Especifica la precisión y la escala
+                   .HasColumnType("decimal(18,2)"); 
             builder.Property(tt => tt.QuantityAvailable).IsRequired();
 
             builder.HasMany(tt => tt.Tickets)
                    .WithOne(t => t.TypeTicket)
                    .HasForeignKey(t => t.TypeTicketId);
+        }
+        private void ConfigureEventRegistration(EntityTypeBuilder<EventRegistration> builder)
+        {
+            builder.HasKey(er => new { er.UserId, er.EventId });
+
+            builder.HasOne(er => er.User)
+                   .WithMany(u => u.EventRegistrations)
+                   .HasForeignKey(er => er.UserId);
+
+            builder.HasOne(er => er.Event)
+                   .WithMany(e => e.EventRegistrations)
+                   .HasForeignKey(er => er.EventId);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventMS.Application.Ports
+namespace EventMS.Application.Ports.Ticket
 {
     public interface ICreateTypeTicketUseCase
     {

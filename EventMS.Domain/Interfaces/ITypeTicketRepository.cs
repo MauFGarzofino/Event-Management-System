@@ -13,5 +13,6 @@ namespace EventMS.Domain.Interfaces
         TypeTicket GetTypeTicketById(int id);
         void AddTypeTicket(TypeTicket typeTicket);
         void UpdateTypeTicket(TypeTicket typeTicket);
+        IEnumerable<TypeTicketCount> GetTicketTypeCounts(int eventId);
     }
 }

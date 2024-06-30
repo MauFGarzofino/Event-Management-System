@@ -38,5 +38,18 @@ namespace EventMS.Infrastructure.Repositories
             _context.TypeTickets.Update(typeTicket);
             _context.SaveChanges();
         }
+
+        public IEnumerable<TypeTicketCount> GetTicketTypeCounts(int eventId)
+        {
+            return _context.Tickets
+                .Where(t => t.EventId == eventId)
+                .GroupBy(t => t.TypeTicket)
+                .Select(g => new TypeTicketCount
+                {
+                    TypeTicket = g.Key,
+                    Count = g.Count()
+                })
+                .ToList();
+        }
     }
 }

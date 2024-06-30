@@ -19,6 +19,7 @@ namespace EventMS.Domain.Entities
         private User()
         {
             _tickets = new List<Ticket>();
+            EventRegistrations = new List<EventRegistration>();
         }
 
         public User(string userId, string name, string surname, string email, string nickname, string role)
@@ -30,6 +31,7 @@ namespace EventMS.Domain.Entities
             _nickname = nickname;
             _role = role;
             _tickets = new List<Ticket>();
+            EventRegistrations = new List<EventRegistration>();
         }
 
         public string Id { get; private set; } // This is the 'sub' from the token
@@ -39,6 +41,7 @@ namespace EventMS.Domain.Entities
         public string Nickname => _nickname;
         public string Role => _role;
         public IReadOnlyCollection<Ticket> Tickets => _tickets.AsReadOnly();
+        public ICollection<EventRegistration> EventRegistrations { get; private set; }
 
         public void UpdateContactInformation(string name, string surname, string email, string nickname, string role)
         {
