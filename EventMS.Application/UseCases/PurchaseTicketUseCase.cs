@@ -14,19 +14,23 @@ namespace EventMS.Application.UseCases
     public class PurchaseTicketUseCase : IPurchaseTicketUseCase
     {
         private readonly ITypeTicketRepository _typeTicketRepository;
+        private readonly IEventRepository _eventRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly IMapper _mapper;
 
-        public PurchaseTicketUseCase(ITicketRepository ticketRepository, IMapper mapper, ITypeTicketRepository typeTicketRepository)
+        public PurchaseTicketUseCase(ITicketRepository ticketRepository, IMapper mapper, ITypeTicketRepository typeTicketRepository, IEventRepository eventRepository)
         {
+            _eventRepository = eventRepository;
             _ticketRepository = ticketRepository;
             _typeTicketRepository = typeTicketRepository;
             _mapper = mapper;
         }
 
-        public Ticket Execute(int ticketId, string userId)
+        public Ticket Execute(int ticketId, User user) 
         {
-            var ticketType = _typeTicketRepository.GetById(ticketId);
+            TypeTicket ticketType = _typeTicketRepository.GetTypeTicketById(ticketId);
+
+            Event Event = _eventRepository.GetEventById(ticketType.EventId);
 
             if (ticketType.QuantityAvailable == 0)
             {
@@ -34,18 +38,16 @@ namespace EventMS.Application.UseCases
                 return null;
             }
 
-            if(ticketType == null)
+            if (ticketType == null)
             {
 
+            }
 
-                public Ticket(Event ev, User user, TypeTicket typeTicket)
+            var newTicket = new Ticket(Event, user, ticketType);
 
-        //TODO: hacer un map
-        var newTicket = new Ticket(ticketType.,  );
+            ticketType.QuantityAvailable -= 1;
 
-            ticket.QuantityAvailable -= 1;
-
-            _typeTicketRepository.UpdateTicketQuantityAvailable(ticket);
+            _typeTicketRepository.UpdateTypeTicket(ticketType);
             
             _ticketRepository.AddTicket(newTicket);
 

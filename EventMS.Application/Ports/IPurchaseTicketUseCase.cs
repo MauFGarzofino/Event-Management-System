@@ -9,6 +9,6 @@ namespace EventMS.Application.Ports
 {
     public interface IPurchaseTicketUseCase
     {
-        Ticket Execute(int ticketId, string userId);
+        Ticket Execute(int ticketId, User userId);
     }
 }
