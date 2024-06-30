@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EventMS.Application.DTOs.Tickets;
-using EventMS.Application.Ports;
+using EventMS.Application.Ports.Ticket;
 using EventMS.Domain.Entities;
 using EventMS.Domain.Interfaces;
 using System;
@@ -9,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventMS.Application.UseCases
+namespace EventMS.Application.UseCases.Ticket
 {
-    internal class CreateTypeTicketUseCase : ICreateTypeTicketUseCase
+    public class CreateTypeTicketUseCase : ICreateTypeTicketUseCase
     {
         private readonly ITypeTicketRepository _typeTicketRepository;
         private readonly IMapper _mapper;

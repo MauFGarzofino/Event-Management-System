@@ -1,7 +1,9 @@
 ﻿using EventManagementSystemAPI.Filters;
 using EventMS.Application.Port;
 using EventMS.Application.Ports;
+using EventMS.Application.Ports.Ticket;
 using EventMS.Application.UseCases;
+using EventMS.Application.UseCases.Ticket;
 using EventMS.Application.UseCases.UserUseCases;
 using EventMS.Domain.Interfaces;
 using EventMS.Infrastructure.Repositories;
@@ -15,6 +17,7 @@ namespace EventManagementSystemAPI.Util
         {
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITypeTicketRepository, TypeTicketRepository>();
         }
 
         public static void AddUseCases(this IServiceCollection services)
@@ -28,6 +31,9 @@ namespace EventManagementSystemAPI.Util
 
             services.AddScoped<IGetAllUsersUseCase, GetAllUsersUseCase>();
             services.AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
+
+            services.AddScoped<ICreateTypeTicketUseCase, CreateTypeTicketUseCase>();
+            services.AddScoped<IGetTicketTypeCountsUseCase, GetTicketTypeCountsUseCase>();
         }
 
     }

@@ -78,7 +78,7 @@ namespace EventMS.Infrastructure.Data
             builder.Property(tt => tt.Description).IsRequired();
             builder.Property(tt => tt.Price)
                    .IsRequired()
-                   .HasColumnType("decimal(18,2)"); // Especifica la precisión y la escala
+                   .HasColumnType("decimal(18,2)"); 
             builder.Property(tt => tt.QuantityAvailable).IsRequired();
 
             builder.HasMany(tt => tt.Tickets)
