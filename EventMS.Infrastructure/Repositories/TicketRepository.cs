@@ -42,5 +42,14 @@ namespace EventMS.Infrastructure.Repositories
         {
             return await _context.Tickets.AnyAsync(t => t.Id == id);
         }
+
+        public async Task<IEnumerable<Ticket>> GetTicketsByUserId(string userId)
+        {
+            return await _context.Tickets
+                .Include(t => t.Event)
+                .Include(t => t.TypeTicket)
+                .Where(t => t.UserId == userId)
+                .ToListAsync();
+        }
     }
 }
