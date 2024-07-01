@@ -15,5 +15,6 @@ namespace EventMS.Domain.Entities
         public Event Event { get; set; }
 
         public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
+        public int Id { get; set; }
     }
 }

@@ -27,7 +27,8 @@ namespace EventMS.Infrastructure.Data
             modelBuilder.Entity<Ticket>(ConfigureTicket);
             modelBuilder.Entity<User>(ConfigureUser);
             modelBuilder.Entity<TypeTicket>(ConfigureTypeTicket);
-            modelBuilder.Entity<EventRegistration>(ConfigureEventRegistration);
+            modelBuilder.Entity<EventRegistration>()
+                .HasKey(e => e.Id);
         }
 
         private void ConfigureEvent(EntityTypeBuilder<Event> builder)
