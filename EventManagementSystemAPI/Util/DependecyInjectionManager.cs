@@ -19,6 +19,7 @@ namespace EventManagementSystemAPI.Util
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITypeTicketRepository, TypeTicketRepository>();
             services.AddScoped<ITicketRepository,  TicketRepository>();
+            services.AddScoped<IEventRegistrationRepository, EventRegistrationRepository>();
         }
 
         public static void AddUseCases(this IServiceCollection services)
@@ -30,6 +31,8 @@ namespace EventManagementSystemAPI.Util
             services.AddScoped<ICreateUserUseCase, CreateUserUseCase>();
             services.AddScoped<IGetEventByIdUseCase, GetEventByIdUseCase>();
             services.AddScoped<ICreateTypeTicketUseCase, CreateTypeTicketUseCase>();
+            services.AddScoped<ICreateEventRegistrationUseCase, CreateEventRegistrationUseCase>();
+            services.AddScoped<IDeleteEventRegistrationUseCase, DeleteEventRegistrationUseCase>();
 
             services.AddScoped<IGetAllUsersUseCase, GetAllUsersUseCase>();
             services.AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
