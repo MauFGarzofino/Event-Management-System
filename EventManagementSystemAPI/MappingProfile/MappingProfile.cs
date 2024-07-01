@@ -24,10 +24,12 @@ namespace EventManagementSystemAPI.MappingProfile
                 .ForMember(dest => dest.Nickname, opt => opt.MapFrom(src => src.FindFirstValue(ClaimTypes.Name) ?? src.FindFirstValue("preferred_username")))
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.FindFirstValue(ClaimTypes.Role) ?? src.Claims.FirstOrDefault(c => c.Type == "realm_access").Value));
             CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
             CreateMap<TypeTicket, TypeTicketDto>().ReverseMap();
 
             CreateMap<TypeTicketCount, TicketTypeCountDto>()
             .ForMember(dest => dest.TypeName, opt => opt.MapFrom(src => src.TypeTicket.Name));
+
         }
     }
 }

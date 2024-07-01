@@ -1,6 +1,7 @@
 ﻿using EventMS.Domain.Entities;
 using EventMS.Domain.Interfaces;
 using EventMS.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +24,9 @@ namespace EventMS.Infrastructure.Repositories
             return _context.TypeTickets.ToList();
         }
 
-        public TypeTicket GetTypeTicketById(int id)
+        public async Task<TypeTicket> GetTypeTicketById(int id)
         {
-            return _context.TypeTickets.FirstOrDefault(tt => tt.Id == id);
+            return await _context.TypeTickets.FirstOrDefaultAsync(tt => tt.Id == id);
         }
         public void AddTypeTicket(TypeTicket typeTicket)
         {
@@ -33,10 +34,10 @@ namespace EventMS.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public void UpdateTypeTicket(TypeTicket typeTicket)
+        public async Task UpdateTypeTicket(TypeTicket typeTicket)
         {
             _context.TypeTickets.Update(typeTicket);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public IEnumerable<TypeTicketCount> GetTicketTypeCounts(int eventId)

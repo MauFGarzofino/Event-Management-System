@@ -48,7 +48,7 @@ public class CreateUserUseCaseTests
         }));
 
         // Act
-        var user = _createUserUseCase.Execute(userClaims);
+        var user = await _createUserUseCase.Execute(userClaims);
 
         // Assert
         _userRepositoryMock.Verify(repo => repo.AddUserAsync(It.IsAny<User>()), Times.Once);

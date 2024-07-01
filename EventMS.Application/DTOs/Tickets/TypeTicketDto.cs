@@ -13,7 +13,5 @@ namespace EventMS.Application.DTOs.Tickets
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
-        public int QuantityAvailable { get; set; }
-        public ICollection<TypeTicket> Tickets { get; set; }
-    }
+        public int QuantityAvailable { get; set; }    }
 }

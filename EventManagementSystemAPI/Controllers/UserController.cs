@@ -1,6 +1,9 @@
-﻿using EventMS.Application.DTOs;
+﻿using EventManagementSystemAPI.Models;
+using EventMS.Application.DTOs;
 using EventMS.Application.Ports;
+using EventMS.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace EventManagementSystemAPI.Controllers
@@ -11,11 +14,13 @@ namespace EventManagementSystemAPI.Controllers
     {
         private readonly IGetAllUsersUseCase _getAllUsersUseCase;
         private readonly IGetUserByIdUseCase _getUserByIdUseCase;
+        private readonly ICreateUserUseCase _createUserUseCase;
 
         public UserController(IGetAllUsersUseCase getAllUsersUseCase, IGetUserByIdUseCase getUserByIdUseCase)
         {
             _getAllUsersUseCase = getAllUsersUseCase;
             _getUserByIdUseCase = getUserByIdUseCase;
+            
         }
 
         [HttpGet]
@@ -47,7 +52,6 @@ namespace EventManagementSystemAPI.Controllers
                 email = user.Email,
             };
             return Ok(response);
-
         }
     }
 }
