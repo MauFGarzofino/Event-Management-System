@@ -1,8 +1,10 @@
 ﻿using EventManagementSystemAPI.Controllers;
 using EventManagementSystemAPI.Models;
+using EventMS.Application.DTOs.Tickets;
 using EventMS.Application.Ports;
 using EventMS.Application.Ports.Ticket;
 using EventMS.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
@@ -27,6 +29,13 @@ namespace EventManagementSystemAPI.Tests
             _mockCreateUserUseCase = new Mock<ICreateUserUseCase>();
             _mockGetUserTicketsUseCase = new Mock<IGetUserTicketsUseCase>();
             _controller = new TicketController(_mockPurchaseTicketUseCase.Object, _mockCreateUserUseCase.Object, _mockGetUserTicketsUseCase.Object);
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]{new Claim(ClaimTypes.NameIdentifier, "1")}, "mock"));
+
+            _controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext { User = user }
+            };
         }
 
 
@@ -53,6 +62,40 @@ namespace EventManagementSystemAPI.Tests
             Assert.Equal(400, response.Status);
             Assert.Equal("Insufficient tickets available.", response.Message);
             Assert.Null(response.Data);
+        }
+
+        [Fact]
+        public async Task GetUserTickets_ReturnsUnauthorized_WhenUserNotAuthenticated()
+        {
+            // Arrange
+            _controller.ControllerContext.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
+
+            // Act
+            var result = await _controller.GetUserTickets();
+
+            // Assert
+            var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
+            var response = Assert.IsType<Response<string>>(unauthorizedResult.Value);
+            Assert.Equal(401, response.Status);
+            Assert.Equal("User not authenticated.", response.Message);
+        }
+
+        [Fact]
+        public async Task GetUserTickets_ReturnsOk_WhenNoTicketsFound()
+        {
+            // Arrange
+            var userId = "1";
+            _mockGetUserTicketsUseCase.Setup(x => x.Execute(userId)).ReturnsAsync(new List<TicketDto>());
+
+            // Act
+            var result = await _controller.GetUserTickets();
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<Response<IEnumerable<TicketDto>>>(okResult.Value);
+            Assert.Equal(200, response.Status);
+            Assert.Equal("No tickets found for the user.", response.Message);
+            Assert.Empty(response.Data);
         }
 
     }
