@@ -5,6 +5,7 @@ using EventMS.Application.Port;
 using EventMS.Application.Ports;
 using EventMS.Application.UseCases;
 using EventMS.Domain.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
@@ -52,8 +53,12 @@ namespace EventManagementSystemAPI.Tests
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var returnValue = Assert.IsType<List<EventDto>>(okResult.Value);
-            Assert.Equal(2, returnValue.Count);
+            var returnValue = Assert.IsType<Response<IEnumerable<EventDto>>>(okResult.Value);
+            Assert.Equal(2, returnValue.Data.ToList().Count);
+            Assert.Equal("Events found successfully", returnValue.Message);
+            Assert.Equal(200, returnValue.Status);
+
+
         }
 
         [Fact]
@@ -217,8 +222,13 @@ namespace EventManagementSystemAPI.Tests
 
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.IsType<SerializableError>(badRequestResult.Value);
+            var response = Assert.IsType<Response<Dictionary<string, string[]>>>(badRequestResult.Value);
+            Assert.Equal(400, response.Status);
+            Assert.Equal("Validation failed. Please check the provided data.", response.Message);
+            Assert.True(response.Data.ContainsKey("Title"));
+            Assert.Contains("Required", response.Data["Title"]);
         }
+
 
         [Fact]
         public void Delete_ShouldReturnNoContent_WhenEventIsDeleted()
@@ -231,7 +241,12 @@ namespace EventManagementSystemAPI.Tests
             var result = _controller.Delete(eventId);
 
             // Assert
-            Assert.IsType<NoContentResult>(result);
+            var eventDelted = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<Response<string>>(eventDelted.Value);
+            Assert.Equal(200, response.Status);
+            Assert.Equal("Event successfully removed", response.Message);
+            Assert.Null(response.Errors);
+            Assert.Null(response.Data);
         }
 
         [Fact]

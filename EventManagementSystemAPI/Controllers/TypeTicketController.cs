@@ -32,7 +32,14 @@ namespace EventManagementSystemAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new Response<Dictionary<string, string[]>>(
+                    400,
+                    "Validation failed. Please check the provided data.",
+                    ModelState.ToDictionary(
+                        m => m.Key,
+                        m => m.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    )
+                ));
             }
             try
             {
