@@ -26,9 +26,11 @@ namespace EventManagementSystemAPI.MappingProfile
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
             CreateMap<TypeTicket, TypeTicketDto>().ReverseMap();
-
+            CreateMap<Ticket, TicketDto>()
+                .ForMember(dest => dest.EventTitle, opt => opt.MapFrom(src => src.Event.Title))
+                .ForMember(dest => dest.TypeTicketName, opt => opt.MapFrom(src => src.TypeTicket.Name));
             CreateMap<TypeTicketCount, TicketTypeCountDto>()
-            .ForMember(dest => dest.TypeName, opt => opt.MapFrom(src => src.TypeTicket.Name));
+                .ForMember(dest => dest.TypeName, opt => opt.MapFrom(src => src.TypeTicket.Name));
 
         }
     }

@@ -1,6 +1,7 @@
 ﻿using EventManagementSystemAPI.Controllers;
 using EventManagementSystemAPI.Models;
 using EventMS.Application.Ports;
+using EventMS.Application.Ports.Ticket;
 using EventMS.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -17,13 +18,15 @@ namespace EventManagementSystemAPI.Tests
     {
         private readonly Mock<IPurchaseTicketUseCase> _mockPurchaseTicketUseCase;
         private readonly Mock<ICreateUserUseCase> _mockCreateUserUseCase;
+        private readonly Mock<IGetUserTicketsUseCase> _mockGetUserTicketsUseCase;
         private readonly TicketController _controller;
 
         public TicketControllerTests()
         {
             _mockPurchaseTicketUseCase = new Mock<IPurchaseTicketUseCase>();
             _mockCreateUserUseCase = new Mock<ICreateUserUseCase>();
-            _controller = new TicketController(_mockPurchaseTicketUseCase.Object, _mockCreateUserUseCase.Object);
+            _mockGetUserTicketsUseCase = new Mock<IGetUserTicketsUseCase>();
+            _controller = new TicketController(_mockPurchaseTicketUseCase.Object, _mockCreateUserUseCase.Object, _mockGetUserTicketsUseCase.Object);
         }
 
 
