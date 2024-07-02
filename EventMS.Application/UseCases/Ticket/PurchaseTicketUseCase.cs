@@ -12,7 +12,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventMS.Application.UseCases
+namespace EventMS.Application.UseCases.Ticket
 {
     public class PurchaseTicketUseCase : IPurchaseTicketUseCase
     {
@@ -31,14 +31,13 @@ namespace EventMS.Application.UseCases
             _createUserUseCase = createUserUseCase;
         }
 
-        public async Task<EventMS.Domain.Entities.Ticket> Execute(int ticketId, ClaimsPrincipal user, int evebtId) 
+        public async Task<EventMS.Domain.Entities.Ticket> Execute(int ticketId, ClaimsPrincipal user, int eventId)
         {
             var userCreated = await _createUserUseCase.Execute(user);
-                        
-            TypeTicket ticketType =  await _typeTicketRepository.GetTypeTicketById(ticketId);
 
-            
-            if(ticketType == null)
+            TypeTicket ticketType = await _typeTicketRepository.GetTypeTicketById(ticketId);
+
+            if (ticketType == null)
             {
                 throw new KeyNotFoundException($"Ticket Type with id '{ticketId}' not found.");
             }
@@ -47,14 +46,11 @@ namespace EventMS.Application.UseCases
             {
                 return null;
             }
-           
 
-            var newTicket = new EventMS.Domain.Entities.Ticket(evebtId, userCreated.Id, ticketId);
+            var newTicket = new EventMS.Domain.Entities.Ticket(userCreated.Id, ticketId);
 
             ticketType.QuantityAvailable -= 1;
-
-            await _typeTicketRepository.UpdateTypeTicket(ticketType);
-            
+            await _typeTicketRepository.UpdateTypeTicketAsync(ticketType);
             await _ticketRepository.AddTicket(newTicket);
 
             return newTicket;

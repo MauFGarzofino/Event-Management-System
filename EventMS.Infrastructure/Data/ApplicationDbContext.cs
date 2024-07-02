@@ -1,11 +1,6 @@
 ﻿using EventMS.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EventMS.Infrastructure.Data
 {
@@ -39,7 +34,10 @@ namespace EventMS.Infrastructure.Data
             builder.Property(e => e.Time).IsRequired();
             builder.Property(e => e.Location).IsRequired();
 
-            builder.HasMany(e => e.Tickets).WithOne(t => t.Event).HasForeignKey(t => t.EventId);
+            builder.HasMany(e => e.TypeTickets)
+                   .WithOne(tt => tt.Event)
+                   .HasForeignKey(tt => tt.EventId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
 
         private void ConfigureTicket(EntityTypeBuilder<Ticket> builder)
@@ -47,17 +45,15 @@ namespace EventMS.Infrastructure.Data
             builder.HasKey(t => t.Id);
             builder.Property(t => t.PurchaseDate).IsRequired();
 
-            builder.HasOne(t => t.Event)
-                   .WithMany(e => e.Tickets)
-                   .HasForeignKey(t => t.EventId);
-
             builder.HasOne(t => t.User)
                    .WithMany(u => u.Tickets)
-                   .HasForeignKey(t => t.UserId);
+                   .HasForeignKey(t => t.UserId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(t => t.TypeTicket)
                    .WithMany(tt => tt.Tickets)
-                   .HasForeignKey(t => t.TypeTicketId);
+                   .HasForeignKey(t => t.TypeTicketId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
 
         private void ConfigureUser(EntityTypeBuilder<User> builder)
@@ -71,8 +67,10 @@ namespace EventMS.Infrastructure.Data
 
             builder.HasMany(u => u.Tickets)
                    .WithOne(t => t.User)
-                   .HasForeignKey(t => t.UserId);
+                   .HasForeignKey(t => t.UserId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
+
         private void ConfigureTypeTicket(EntityTypeBuilder<TypeTicket> builder)
         {
             builder.HasKey(tt => tt.Id);
@@ -80,24 +78,34 @@ namespace EventMS.Infrastructure.Data
             builder.Property(tt => tt.Description).IsRequired();
             builder.Property(tt => tt.Price)
                    .IsRequired()
-                   .HasColumnType("decimal(18,2)"); 
+                   .HasColumnType("decimal(18,2)");
             builder.Property(tt => tt.QuantityAvailable).IsRequired();
 
             builder.HasMany(tt => tt.Tickets)
                    .WithOne(t => t.TypeTicket)
-                   .HasForeignKey(t => t.TypeTicketId);
+                   .HasForeignKey(t => t.TypeTicketId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(tt => tt.Event)
+                   .WithMany(e => e.TypeTickets)
+                   .HasForeignKey(tt => tt.EventId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
+
         private void ConfigureEventRegistration(EntityTypeBuilder<EventRegistration> builder)
         {
-            builder.HasKey(er => new { er.UserId, er.EventId });
+            builder.HasKey(er => er.Id);
+            builder.HasIndex(er => new { er.UserId, er.EventId }).IsUnique();
 
             builder.HasOne(er => er.User)
                    .WithMany(u => u.EventRegistrations)
-                   .HasForeignKey(er => er.UserId);
+                   .HasForeignKey(er => er.UserId)
+                   .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(er => er.Event)
                    .WithMany(e => e.EventRegistrations)
-                   .HasForeignKey(er => er.EventId);
+                   .HasForeignKey(er => er.EventId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace EventManagementSystemAPI.Controllers
 
         [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
         [HttpPost]
-        public IActionResult Post([FromBody] TypeTicketDto newTypeTicketDto)
+        public async Task<IActionResult> Post([FromBody] TypeTicketDto newTypeTicketDto)
         {
             if (!ModelState.IsValid)
             {
@@ -41,10 +41,10 @@ namespace EventManagementSystemAPI.Controllers
                     )
                 ));
             }
+
             try
             {
-                var createdTypeTicket = _createTypeTicketUseCase.Execute(newTypeTicketDto);
-
+                var createdTypeTicket = await _createTypeTicketUseCase.ExecuteAsync(newTypeTicketDto);
                 return CreatedAtAction(nameof(Post), new { id = createdTypeTicket.Id }, new Response<TypeTicket>(
                     201,
                     "Type ticket created successfully.",
@@ -75,14 +75,13 @@ namespace EventManagementSystemAPI.Controllers
                     null
                 ));
             }
-
         }
 
         [Authorize(Policy = "OrganizerClientRole")]
         [HttpGet("{eventId}/ticket-types/count")]
-        public IActionResult GetTicketTypeCounts(int eventId)
+        public async Task<IActionResult> GetTicketTypeCounts(int eventId)
         {
-            var ticketTypeCounts = _getTicketTypeCountsUseCase.Execute(eventId);
+            var ticketTypeCounts = await _getTicketTypeCountsUseCase.ExecuteAsync(eventId);
 
             if (!ticketTypeCounts.Any())
             {

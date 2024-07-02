@@ -10,6 +10,6 @@ namespace EventMS.Application.Ports.Ticket
 {
     public interface ICreateTypeTicketUseCase
     {
-        TypeTicket Execute(TypeTicketDto typeTicketDto);
+        Task<TypeTicket> ExecuteAsync(TypeTicketDto typeTicketDto);
     }
 }
