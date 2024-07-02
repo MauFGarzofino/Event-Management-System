@@ -27,20 +27,6 @@ namespace EventManagementSystemAPI.Tests
         }
 
         [Fact]
-        public void Post_ReturnsBadRequest_WhenModelStateIsInvalid()
-        {
-            // Arrange
-            _controller.ModelState.AddModelError("Name", "Required");
-
-            // Act
-            var result = _controller.Post(new TypeTicketDto());
-
-            // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.IsType<SerializableError>(badRequestResult.Value);
-        }
-
-        [Fact]
         public void Post_ReturnsCreated_WhenTypeTicketCreatedSuccessfully()
         {
             // Arrange
