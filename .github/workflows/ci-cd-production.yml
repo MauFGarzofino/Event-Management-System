@@ -13,6 +13,10 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: ./EventManagementSystemAPI/EventManagementSystemAPI.csproj
+  ASPNETCORE_ENVIRONMENT: Production
+  Jwt__Authority: ${{ secrets.JWT_AUTHORITY }}
+  Jwt__Audience: ${{ secrets.JWT_AUDIENCE }}
+  Jwt__RequireHttpsMetadata: true
 
 permissions:
   checks: write
