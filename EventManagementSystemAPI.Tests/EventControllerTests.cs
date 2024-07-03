@@ -19,6 +19,8 @@ namespace EventManagementSystemAPI.Tests
         private readonly Mock<IUpdateEventUseCase> _mockUpdateEventUseCase;
         private readonly Mock<IDeleteEventUseCase> _mockDeleteEventUseCase;
         private readonly Mock<IGetEventByIdUseCase> _mockGetEventByIdUseCase;
+        private readonly Mock<IGetEventByTitleUseCase> _mockGetEventByTitleUseCase;
+        private readonly Mock<IGetEventsByDateUseCase> _mockGetEventsByDateUseCase;
         private readonly EventController _controller;
 
         public EventControllerTests()
@@ -28,12 +30,16 @@ namespace EventManagementSystemAPI.Tests
             _mockUpdateEventUseCase = new Mock<IUpdateEventUseCase>();
             _mockDeleteEventUseCase = new Mock<IDeleteEventUseCase>();
             _mockGetEventByIdUseCase = new Mock<IGetEventByIdUseCase>();
+            _mockGetEventByTitleUseCase = new Mock<IGetEventByTitleUseCase>();
+            _mockGetEventsByDateUseCase = new Mock<IGetEventsByDateUseCase>();
             _controller = new EventController(
                 _mockGetAllEventsUseCase.Object,
                 _mockCreateEventUseCase.Object,
                 _mockUpdateEventUseCase.Object,
                 _mockDeleteEventUseCase.Object,
-                _mockGetEventByIdUseCase.Object
+                _mockGetEventByIdUseCase.Object,
+                _mockGetEventByTitleUseCase.Object,
+                _mockGetEventsByDateUseCase.Object
               );
         }
 
