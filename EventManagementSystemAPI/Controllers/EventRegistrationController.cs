@@ -54,7 +54,6 @@ namespace EventManagementSystemAPI.Controllers
                 });
             }
         }
-
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
