@@ -11,8 +11,8 @@ namespace EventMS.Domain.Interfaces
     {
         IEnumerable<TypeTicket> GetAllTypeTickets();
         Task<TypeTicket> GetTypeTicketById(int id);
-        void AddTypeTicket(TypeTicket typeTicket);
-        Task UpdateTypeTicket(TypeTicket typeTicket);
-        IEnumerable<TypeTicketCount> GetTicketTypeCounts(int eventId);
+        Task AddTypeTicketAsync(TypeTicket typeTicket);
+        Task UpdateTypeTicketAsync(TypeTicket typeTicket);
+        Task<IEnumerable<TypeTicketCount>> GetTicketTypeCountsAsync(int eventId);
     }
 }

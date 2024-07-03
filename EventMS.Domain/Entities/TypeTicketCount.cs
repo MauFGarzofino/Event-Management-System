@@ -8,7 +8,9 @@ namespace EventMS.Domain.Entities
 {
     public class TypeTicketCount
     {
-        public TypeTicket TypeTicket { get; set; }
-        public int Count { get; set; }
+        public string TypeName { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+        public int QuantityAvailable { get; set; }
     }
 }

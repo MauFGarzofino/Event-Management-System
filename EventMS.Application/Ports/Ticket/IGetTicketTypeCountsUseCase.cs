@@ -9,6 +9,6 @@ namespace EventMS.Application.Ports.Ticket
 {
     public interface IGetTicketTypeCountsUseCase
     {
-        IEnumerable<TicketTypeCountDto> Execute(int eventId);
+        Task<IEnumerable<TicketTypeCountDto>> ExecuteAsync(int eventId);
     }
 }

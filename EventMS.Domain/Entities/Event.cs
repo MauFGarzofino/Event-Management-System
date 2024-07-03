@@ -18,7 +18,6 @@ namespace EventMS.Domain.Entities
         private string _title;
         private string _description;
         private string _location;
-        private List<Ticket> _tickets;
 
         public Event(string title, string description, DateTime date, TimeSpan time, string location)
         {
@@ -27,14 +26,15 @@ namespace EventMS.Domain.Entities
             _date = date;
             _time = time;
             _location = location;
-            _tickets = new List<Ticket>();
+            Tickets = new List<Ticket>();
+            TypeTickets = new List<TypeTicket>();
             EventRegistrations = new List<EventRegistration>();
         }
 
-        // Constructor sin parámetros requerido por EF
         private Event()
         {
-            _tickets = new List<Ticket>();
+            Tickets = new List<Ticket>();
+            TypeTickets = new List<TypeTicket>();
             EventRegistrations = new List<EventRegistration>();
         }
 
@@ -44,31 +44,16 @@ namespace EventMS.Domain.Entities
         public DateTime Date => _date;
         public TimeSpan Time { get; private set; }
         public string Location => _location;
-        public IReadOnlyCollection<Ticket> Tickets => _tickets.AsReadOnly();
+        [JsonIgnore]
+        public ICollection<Ticket> Tickets { get; private set; }
+        [JsonIgnore]
+        public ICollection<TypeTicket> TypeTickets { get; private set; }
+        [JsonIgnore]
         public ICollection<EventRegistration> EventRegistrations { get; private set; }
 
-        public void UpdateDetails(string title, string description, DateTime date, TimeSpan time, string location)
+        public void AddTypeTicket(TypeTicket typeTicket)
         {
-            _title = title;
-            _description = description;
-            _date = date;
-            _time = time;
-            _location = location;
-        }
-
-        public void AddTicket(Ticket ticket)
-        {
-            if (_tickets.Count >= 100)
-            {
-                throw new InvalidOperationException("Cannot add more tickets, event is full.");
-            }
-            _tickets.Add(ticket);
-        }
-
-        public void RemoveTicket(Ticket ticket)
-        {
-            _tickets.Remove(ticket);
+            TypeTickets.Add(typeTicket);
         }
     }
-
 }

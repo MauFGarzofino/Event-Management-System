@@ -4,11 +4,9 @@ using EventMS.Application.UseCases.Ticket;
 using EventMS.Domain.Entities;
 using EventMS.Domain.Interfaces;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace EventMS.Application.Tests
 {
@@ -32,13 +30,13 @@ namespace EventMS.Application.Tests
             var userId = "user1";
             var tickets = new List<Ticket>
             {
-                new Ticket { Id = 1, EventId = 1, UserId = userId, TypeTicketId = 1 },
-                new Ticket { Id = 2, EventId = 2, UserId = userId, TypeTicketId = 2 }
+                new Ticket { Id = 1, UserId = userId, TypeTicketId = 1 },
+                new Ticket { Id = 2, UserId = userId, TypeTicketId = 2 }
             };
             var ticketDtos = new List<TicketDto>
             {
-                new TicketDto { Id = 1, EventId = 1, UserId = userId, TypeTicketId = 1 },
-                new TicketDto { Id = 2, EventId = 2, UserId = userId, TypeTicketId = 2 }
+                new TicketDto { Id = 1, UserId = userId, TypeTicketId = 1 },
+                new TicketDto { Id = 2, UserId = userId, TypeTicketId = 2 }
             };
 
             _mockRepository.Setup(r => r.GetTicketsByUserId(userId)).ReturnsAsync(tickets);
