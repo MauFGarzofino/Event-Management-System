@@ -61,6 +61,109 @@ namespace EventManagementSystemAPI.Tests
 
         }
 
+        [Fact]
+        public void Put_ReturnsBadRequest_WhenModelStateIsInvalid()
+        {
+            // Arrange
+            _controller.ModelState.AddModelError("Name", "Required");
+
+            // Act
+            var result = _controller.Put(1, new UpdateEventDto());
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var response = Assert.IsType<Response<Dictionary<string, string[]>>>(badRequestResult.Value);
+            Assert.Equal(400, response.Status);
+            Assert.Equal("Validation failed. Please check the provided data.", response.Message);
+            Assert.Single(response.Data);
+        }
+
+        [Fact]
+        public void Put_ReturnsOk_WhenEventIsUpdatedSuccessfully()
+        {
+            // Arrange
+            var updatedEventDto = new UpdateEventDto
+            {
+                Title = "Updated Event",
+                Description = "Updated Description",
+                Date = new DateTime(2023, 7, 1),
+                Time = new TimeSpan(14, 0, 0),
+                Location = "Updated Location"
+            };
+            var updatedEvent = new Event(
+                updatedEventDto.Title,
+                updatedEventDto.Description,
+                updatedEventDto.Date,
+                updatedEventDto.Time,
+                updatedEventDto.Location
+            )
+            {
+                Id = 1
+            };
+            _mockUpdateEventUseCase.Setup(x => x.Execute(updatedEventDto)).Returns(updatedEvent);
+
+            // Act
+            var result = _controller.Put(1, updatedEventDto);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<Response<Event>>(okResult.Value);
+            Assert.Equal(200, response.Status);
+            Assert.Equal("Event updated successfully.", response.Message);
+            Assert.Equal(updatedEvent, response.Data);
+        }
+
+
+        [Fact]
+        public void Put_ReturnsNotFound_WhenEventIsNotFound()
+        {
+            // Arrange
+            var updatedEventDto = new UpdateEventDto { Title = "Updated Event" };
+            _mockUpdateEventUseCase.Setup(x => x.Execute(updatedEventDto)).Throws(new KeyNotFoundException("Event not found"));
+
+            // Act
+            var result = _controller.Put(1, updatedEventDto);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            var response = Assert.IsType<Response<string>>(notFoundResult.Value);
+            Assert.Equal(404, response.Status);
+            Assert.Equal("Event not found", response.Message);
+        }
+
+        [Fact]
+        public void Put_ReturnsBadRequest_WhenArgumentExceptionIsThrown()
+        {
+            // Arrange
+            var updatedEventDto = new UpdateEventDto { Title = "Updated Event" };
+            _mockUpdateEventUseCase.Setup(x => x.Execute(updatedEventDto)).Throws(new ArgumentException("Invalid argument"));
+
+            // Act
+            var result = _controller.Put(1, updatedEventDto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var response = Assert.IsType<Response<string>>(badRequestResult.Value);
+            Assert.Equal(400, response.Status);
+            Assert.Equal("Invalid argument", response.Message);
+        }
+
+        [Fact]
+        public void Put_ReturnsConflict_WhenInvalidOperationExceptionIsThrown()
+        {
+            // Arrange
+            var updatedEventDto = new UpdateEventDto { Title = "Updated Event" };
+            _mockUpdateEventUseCase.Setup(x => x.Execute(updatedEventDto)).Throws(new InvalidOperationException("Operation invalid"));
+
+            // Act
+            var result = _controller.Put(1, updatedEventDto);
+
+            // Assert
+            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
+            var response = Assert.IsType<Response<string>>(conflictResult.Value);
+            Assert.Equal(409, response.Status);
+            Assert.Equal("Operation invalid", response.Message);
+        }
 
         [Fact]
         public void Get_ShouldReturnNoContent_WhenNoEventsExist()
