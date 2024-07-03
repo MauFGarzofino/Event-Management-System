@@ -13,12 +13,10 @@ namespace EventMS.Domain.Entities
         private string _email;
         private string _nickname;
         private string _role;
-        private List<Ticket> _tickets;
 
-        // Constructor sin parámetros requerido por EF
         private User()
         {
-            _tickets = new List<Ticket>();
+            Tickets = new List<Ticket>();
             EventRegistrations = new List<EventRegistration>();
         }
 
@@ -30,7 +28,7 @@ namespace EventMS.Domain.Entities
             _email = email;
             _nickname = nickname;
             _role = role;
-            _tickets = new List<Ticket>();
+            Tickets = new List<Ticket>();
             EventRegistrations = new List<EventRegistration>();
         }
 
@@ -40,21 +38,7 @@ namespace EventMS.Domain.Entities
         public string Email => _email;
         public string Nickname => _nickname;
         public string Role => _role;
-        public IReadOnlyCollection<Ticket> Tickets => _tickets.AsReadOnly();
+        public ICollection<Ticket> Tickets { get; private set; }
         public ICollection<EventRegistration> EventRegistrations { get; private set; }
-
-        public void UpdateContactInformation(string name, string surname, string email, string nickname, string role)
-        {
-            _name = name;
-            _surname = surname;
-            _email = email;
-            _nickname = nickname;
-            _role = role;
-        }
-
-        public void AddTicket(Ticket ticket)
-        {
-            _tickets.Add(ticket);
-        }
     }
 }

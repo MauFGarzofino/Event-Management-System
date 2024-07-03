@@ -21,9 +21,9 @@ namespace EventMS.Application.UseCases.Ticket
             _mapper = mapper;
         }
 
-        public IEnumerable<TicketTypeCountDto> Execute(int eventId)
+        public async Task<IEnumerable<TicketTypeCountDto>> ExecuteAsync(int eventId)
         {
-            var ticketTypeCounts = _typeTicketRepository.GetTicketTypeCounts(eventId);
+            var ticketTypeCounts = await _typeTicketRepository.GetTicketTypeCountsAsync(eventId);
             return _mapper.Map<IEnumerable<TicketTypeCountDto>>(ticketTypeCounts);
         }
     }

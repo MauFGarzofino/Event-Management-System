@@ -1,5 +1,6 @@
 ﻿using EventManagementSystemAPI.Models;
 using EventMS.Application.DTOs;
+using EventMS.Application.DTOs.UsersDto;
 using EventMS.Application.Ports;
 using EventMS.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,7 @@ namespace EventManagementSystemAPI.Controllers
                 return NoContent();
             }
 
-            return Ok(users);
+            return Ok(new Response<IEnumerable<UserDto>>(200, "Users found successfully",users));
         }
 
         [HttpGet("{userId}")]
@@ -42,16 +43,14 @@ namespace EventManagementSystemAPI.Controllers
             var user = await _getUserByIdUseCase.ExecuteAsync(userId);
             if (user == null)
             {
-                return NotFound();
+                return NotFound(new Response<string>(
+                    404,
+                    "User not found",
+                    null
+                ));
             }
 
-            var response = new
-            {
-                userId = user.Id,
-                username = user.Nickname,
-                email = user.Email,
-            };
-            return Ok(response);
+            return Ok(new Response<User>(200, "User found successfully", user));
         }
     }
 }

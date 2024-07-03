@@ -52,7 +52,10 @@ namespace EventManagementSystemAPI.Controllers
                 return NoContent();
             }
 
-            return Ok(events);
+            return Ok(new Response<IEnumerable<EventDto>>( 200,
+                        "Events found successfully",
+                        events
+                    ));
         }
 
         [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
@@ -61,7 +64,14 @@ namespace EventManagementSystemAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new Response<Dictionary<string, string[]>>(
+                    400,
+                    "Validation failed. Please check the provided data.",
+                    ModelState.ToDictionary(
+                        m => m.Key,
+                        m => m.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    )
+                ));
             }
 
             try
@@ -162,7 +172,7 @@ namespace EventManagementSystemAPI.Controllers
             try
             {
                 _deleteEventUseCase.Execute(id);
-                return NoContent();
+                return Ok(new Response<string>(200, "Event successfully removed", null));
             }
             catch (KeyNotFoundException ex)
             {

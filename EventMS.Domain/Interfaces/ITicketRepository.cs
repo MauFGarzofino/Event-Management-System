@@ -13,6 +13,7 @@ namespace EventMS.Domain.Interfaces
         Task AddTicket(Ticket newTicket);
         Task<Ticket> GetTicketById(int id);
         Task<bool> TicketExists(int id);
+        Task<IEnumerable<Ticket>> GetTicketsByUserId(string userId);
     }
 
 }

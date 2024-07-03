@@ -37,6 +37,7 @@ namespace EventManagementSystemAPI.Util
             services.AddScoped<IGetAllUsersUseCase, GetAllUsersUseCase>();
             services.AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
             services.AddScoped<IPurchaseTicketUseCase, PurchaseTicketUseCase>();
+            services.AddScoped<IGetUserTicketsUseCase, GetUserTicketsUseCase>();
             services.AddScoped<ICreateTypeTicketUseCase, CreateTypeTicketUseCase>();
             services.AddScoped<IGetTicketTypeCountsUseCase, GetTicketTypeCountsUseCase>();
         }

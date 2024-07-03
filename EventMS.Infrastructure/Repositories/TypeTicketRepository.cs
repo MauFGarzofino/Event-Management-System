@@ -28,29 +28,30 @@ namespace EventMS.Infrastructure.Repositories
         {
             return await _context.TypeTickets.FirstOrDefaultAsync(tt => tt.Id == id);
         }
-        public void AddTypeTicket(TypeTicket typeTicket)
+
+        public async Task AddTypeTicketAsync(TypeTicket typeTicket)
         {
             _context.TypeTickets.Add(typeTicket);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateTypeTicket(TypeTicket typeTicket)
+        public async Task UpdateTypeTicketAsync(TypeTicket typeTicket)
         {
             _context.TypeTickets.Update(typeTicket);
             await _context.SaveChangesAsync();
         }
 
-        public IEnumerable<TypeTicketCount> GetTicketTypeCounts(int eventId)
+        public async Task<IEnumerable<TypeTicketCount>> GetTicketTypeCountsAsync(int eventId)
         {
-            return _context.Tickets
-                .Where(t => t.EventId == eventId)
-                .GroupBy(t => t.TypeTicket)
-                .Select(g => new TypeTicketCount
+            return await _context.TypeTickets
+                .Where(tt => tt.EventId == eventId)
+                .Select(tt => new TypeTicketCount
                 {
-                    TypeTicket = g.Key,
-                    Count = g.Count()
-                })
-                .ToList();
+                    TypeName = tt.Name,
+                    Description = tt.Description,
+                    Price = tt.Price,
+                    QuantityAvailable = tt.QuantityAvailable
+                }).ToListAsync();
         }
     }
 }

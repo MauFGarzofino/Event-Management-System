@@ -1,4 +1,5 @@
 ﻿using EventManagementSystemAPI.Controllers;
+using EventManagementSystemAPI.Models;
 using EventMS.Application.DTOs;
 using EventMS.Application.DTOs.UsersDto;
 using EventMS.Application.Ports;
@@ -25,6 +26,7 @@ namespace EventManagementSystemAPI.Tests
             _controller = new UserController(_mockGetAllUsersUseCase.Object, _mockGetUserByIdUseCase.Object);
         }
 
+        
         [Fact]
         public void Get_ShouldReturnOkResult_WhenUsersExist()
         {
@@ -41,9 +43,12 @@ namespace EventManagementSystemAPI.Tests
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var returnValue = Assert.IsType<List<UserDto>>(okResult.Value);
-            Assert.Equal(2, returnValue.Count);
+            var response = Assert.IsType<Response<IEnumerable<UserDto>>>(okResult.Value);
+            Assert.Equal(200, response.Status);
+            Assert.Equal("Users found successfully", response.Message);
+            Assert.Equal(userDtos, response.Data);
         }
+
 
         [Fact]
         public void Get_ShouldReturnNoContent_WhenNoUsersExist()

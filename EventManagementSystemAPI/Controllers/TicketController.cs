@@ -1,11 +1,14 @@
 ﻿using EventManagementSystemAPI.Filters.validations;
 using EventManagementSystemAPI.Models;
+using EventMS.Application.DTOs.Tickets;
 using EventMS.Application.Ports;
+using EventMS.Application.Ports.Ticket;
 using EventMS.Domain.Entities;
 using EventMS.Infrastructure.Auth.TokenManagement;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 
 namespace EventManagementSystemAPI.Controllers
 {
@@ -16,11 +19,13 @@ namespace EventManagementSystemAPI.Controllers
     {
         private readonly ICreateUserUseCase _createUserUseCase;
         private readonly IPurchaseTicketUseCase _purchaseTicketUseCase;
+        private readonly IGetUserTicketsUseCase _getUserTicketsUseCase;
 
-        public TicketController(IPurchaseTicketUseCase purchaseTicketUseCase, ICreateUserUseCase createUserUseCase)
+        public TicketController(IPurchaseTicketUseCase purchaseTicketUseCase, ICreateUserUseCase createUserUseCase, IGetUserTicketsUseCase getUserTicketsUseCase)
         {
             _purchaseTicketUseCase = purchaseTicketUseCase;
             _createUserUseCase = createUserUseCase;
+            _getUserTicketsUseCase = getUserTicketsUseCase;
         }
 
         [Authorize(Policy = ApiPolicies.UserClientRole)]
@@ -71,5 +76,43 @@ namespace EventManagementSystemAPI.Controllers
 
         }
 
+        [Authorize(Policy = ApiPolicies.UserClientRole)]
+        [HttpGet("purchased")]
+        public async Task<IActionResult> GetUserTickets()
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new Response<string>(401, "User not authenticated.", null));
+                }
+
+                var tickets = await _getUserTicketsUseCase.Execute(userId);
+
+                if (!tickets.Any())
+                {
+                    return Ok(new Response<IEnumerable<TicketDto>>(
+                        200,
+                        "No tickets found for the user.",
+                        new List<TicketDto>()
+                    ));
+                }
+
+                return Ok(new Response<IEnumerable<TicketDto>>(
+                    200,
+                    "Tickets retrieved successfully.",
+                    tickets
+                ));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response<string>(
+                    500,
+                    "An error occurred while retrieving the tickets.",
+                    ex.Message
+                ));
+            }
+        }
     }
 }

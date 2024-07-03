@@ -8,6 +8,7 @@ namespace EventMS.Domain.Entities
 {
     public class EventRegistration
     {
+        public int Id { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
 
@@ -15,6 +16,6 @@ namespace EventMS.Domain.Entities
         public Event Event { get; set; }
 
         public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
-        public int Id { get; set; }
+        
     }
 }

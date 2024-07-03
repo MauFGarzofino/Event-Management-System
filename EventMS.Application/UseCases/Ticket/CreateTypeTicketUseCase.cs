@@ -14,18 +14,30 @@ namespace EventMS.Application.UseCases.Ticket
     public class CreateTypeTicketUseCase : ICreateTypeTicketUseCase
     {
         private readonly ITypeTicketRepository _typeTicketRepository;
+        private readonly IEventRepository _eventRepository;
         private readonly IMapper _mapper;
 
-        public CreateTypeTicketUseCase(ITypeTicketRepository typeTicketRepository, IMapper mapper)
+        public CreateTypeTicketUseCase(ITypeTicketRepository typeTicketRepository, IEventRepository eventRepository, IMapper mapper)
         {
             _typeTicketRepository = typeTicketRepository;
+            _eventRepository = eventRepository;
             _mapper = mapper;
         }
 
-        public TypeTicket Execute(TypeTicketDto typeTicketDto)
+        public async Task<TypeTicket> ExecuteAsync(TypeTicketDto typeTicketDto)
         {
+            var eventEntity = _eventRepository.GetEventById(typeTicketDto.EventId);
+
+            if (eventEntity == null)
+            {
+                throw new KeyNotFoundException($"Event with id '{typeTicketDto.EventId}' not found.");
+            }
+
             var typeTicket = _mapper.Map<TypeTicket>(typeTicketDto);
-            _typeTicketRepository.AddTypeTicket(typeTicket);
+            eventEntity.AddTypeTicket(typeTicket);
+
+            await _typeTicketRepository.AddTypeTicketAsync(typeTicket);
+
             return typeTicket;
         }
     }

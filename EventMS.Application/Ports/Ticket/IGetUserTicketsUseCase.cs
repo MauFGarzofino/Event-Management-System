@@ -1,5 +1,4 @@
 ﻿using EventMS.Application.DTOs.Tickets;
-using EventMS.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace EventMS.Application.Ports.Ticket
 {
-    public interface ICreateTypeTicketUseCase
+    public interface IGetUserTicketsUseCase
     {
-        Task<TypeTicket> ExecuteAsync(TypeTicketDto typeTicketDto);
+        Task<IEnumerable<TicketDto>> Execute(string userId);
     }
 }

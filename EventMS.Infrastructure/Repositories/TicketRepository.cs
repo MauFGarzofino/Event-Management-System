@@ -21,7 +21,10 @@ namespace EventMS.Infrastructure.Repositories
 
         public async Task<IEnumerable<Ticket>> GetAllTickets()
         {
-            return await _context.Tickets.Include(t => t.Event).Include(t => t.User).ToListAsync();
+            return await _context.Tickets
+                .Include(t => t.TypeTicket)
+                .Include(t => t.User)
+                .ToListAsync();
         }
 
         public async Task AddTicket(Ticket newTicket)
@@ -33,7 +36,7 @@ namespace EventMS.Infrastructure.Repositories
         public async Task<Ticket> GetTicketById(int id)
         {
             return await _context.Tickets
-                .Include(t => t.Event)
+                .Include(t => t.TypeTicket)
                 .Include(t => t.User)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
@@ -41,6 +44,15 @@ namespace EventMS.Infrastructure.Repositories
         public async Task<bool> TicketExists(int id)
         {
             return await _context.Tickets.AnyAsync(t => t.Id == id);
+        }
+
+        public async Task<IEnumerable<Ticket>> GetTicketsByUserId(string userId)
+        {
+            return await _context.Tickets
+                .Include(t => t.TypeTicket)
+                .Include(t => t.TypeTicket.Event) 
+                .Where(t => t.UserId == userId)
+                .ToListAsync();
         }
     }
 }

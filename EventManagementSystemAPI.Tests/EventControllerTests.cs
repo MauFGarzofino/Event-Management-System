@@ -5,6 +5,7 @@ using EventMS.Application.Port;
 using EventMS.Application.Ports;
 using EventMS.Application.UseCases;
 using EventMS.Domain.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
@@ -52,10 +53,117 @@ namespace EventManagementSystemAPI.Tests
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var returnValue = Assert.IsType<List<EventDto>>(okResult.Value);
-            Assert.Equal(2, returnValue.Count);
+            var returnValue = Assert.IsType<Response<IEnumerable<EventDto>>>(okResult.Value);
+            Assert.Equal(2, returnValue.Data.ToList().Count);
+            Assert.Equal("Events found successfully", returnValue.Message);
+            Assert.Equal(200, returnValue.Status);
+
+
         }
 
+        [Fact]
+        public void Put_ReturnsBadRequest_WhenModelStateIsInvalid()
+        {
+            // Arrange
+            _controller.ModelState.AddModelError("Name", "Required");
+
+            // Act
+            var result = _controller.Put(1, new UpdateEventDto());
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var response = Assert.IsType<Response<Dictionary<string, string[]>>>(badRequestResult.Value);
+            Assert.Equal(400, response.Status);
+            Assert.Equal("Validation failed. Please check the provided data.", response.Message);
+            Assert.Single(response.Data);
+        }
+
+        [Fact]
+        public void Put_ReturnsOk_WhenEventIsUpdatedSuccessfully()
+        {
+            // Arrange
+            var updatedEventDto = new UpdateEventDto
+            {
+                Title = "Updated Event",
+                Description = "Updated Description",
+                Date = new DateTime(2023, 7, 1),
+                Time = new TimeSpan(14, 0, 0),
+                Location = "Updated Location"
+            };
+            var updatedEvent = new Event(
+                updatedEventDto.Title,
+                updatedEventDto.Description,
+                updatedEventDto.Date,
+                updatedEventDto.Time,
+                updatedEventDto.Location
+            )
+            {
+                Id = 1
+            };
+            _mockUpdateEventUseCase.Setup(x => x.Execute(updatedEventDto)).Returns(updatedEvent);
+
+            // Act
+            var result = _controller.Put(1, updatedEventDto);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<Response<Event>>(okResult.Value);
+            Assert.Equal(200, response.Status);
+            Assert.Equal("Event updated successfully.", response.Message);
+            Assert.Equal(updatedEvent, response.Data);
+        }
+
+
+        [Fact]
+        public void Put_ReturnsNotFound_WhenEventIsNotFound()
+        {
+            // Arrange
+            var updatedEventDto = new UpdateEventDto { Title = "Updated Event" };
+            _mockUpdateEventUseCase.Setup(x => x.Execute(updatedEventDto)).Throws(new KeyNotFoundException("Event not found"));
+
+            // Act
+            var result = _controller.Put(1, updatedEventDto);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            var response = Assert.IsType<Response<string>>(notFoundResult.Value);
+            Assert.Equal(404, response.Status);
+            Assert.Equal("Event not found", response.Message);
+        }
+
+        [Fact]
+        public void Put_ReturnsBadRequest_WhenArgumentExceptionIsThrown()
+        {
+            // Arrange
+            var updatedEventDto = new UpdateEventDto { Title = "Updated Event" };
+            _mockUpdateEventUseCase.Setup(x => x.Execute(updatedEventDto)).Throws(new ArgumentException("Invalid argument"));
+
+            // Act
+            var result = _controller.Put(1, updatedEventDto);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var response = Assert.IsType<Response<string>>(badRequestResult.Value);
+            Assert.Equal(400, response.Status);
+            Assert.Equal("Invalid argument", response.Message);
+        }
+
+        [Fact]
+        public void Put_ReturnsConflict_WhenInvalidOperationExceptionIsThrown()
+        {
+            // Arrange
+            var updatedEventDto = new UpdateEventDto { Title = "Updated Event" };
+            _mockUpdateEventUseCase.Setup(x => x.Execute(updatedEventDto)).Throws(new InvalidOperationException("Operation invalid"));
+
+            // Act
+            var result = _controller.Put(1, updatedEventDto);
+
+            // Assert
+            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
+            var response = Assert.IsType<Response<string>>(conflictResult.Value);
+            Assert.Equal(409, response.Status);
+            Assert.Equal("Operation invalid", response.Message);
+        }
 
         [Fact]
         public void Get_ShouldReturnNoContent_WhenNoEventsExist()
@@ -114,8 +222,13 @@ namespace EventManagementSystemAPI.Tests
 
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.IsType<SerializableError>(badRequestResult.Value);
+            var response = Assert.IsType<Response<Dictionary<string, string[]>>>(badRequestResult.Value);
+            Assert.Equal(400, response.Status);
+            Assert.Equal("Validation failed. Please check the provided data.", response.Message);
+            Assert.True(response.Data.ContainsKey("Title"));
+            Assert.Contains("Required", response.Data["Title"]);
         }
+
 
         [Fact]
         public void Delete_ShouldReturnNoContent_WhenEventIsDeleted()
@@ -128,7 +241,12 @@ namespace EventManagementSystemAPI.Tests
             var result = _controller.Delete(eventId);
 
             // Assert
-            Assert.IsType<NoContentResult>(result);
+            var eventDelted = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<Response<string>>(eventDelted.Value);
+            Assert.Equal(200, response.Status);
+            Assert.Equal("Event successfully removed", response.Message);
+            Assert.Null(response.Errors);
+            Assert.Null(response.Data);
         }
 
         [Fact]
