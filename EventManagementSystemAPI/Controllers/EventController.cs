@@ -26,19 +26,29 @@ namespace EventManagementSystemAPI.Controllers
         private readonly IUpdateEventUseCase _updateEventUseCase;
         private readonly IDeleteEventUseCase _deleteEventUseCase;
         private readonly IGetEventByIdUseCase _getEventByIdUseCase;
+        private readonly IGetEventByTitleUseCase _getEventByTitleUseCase;
+        private readonly IGetEventsByDateUseCase _getEventsByDateUseCase;
+
 
         public EventController(
             IGetAllEventsUseCase getAllEventsUseCase,
             ICreateEventUseCase createEventUseCase,
             IUpdateEventUseCase updateEventUseCase,
             IDeleteEventUseCase deleteEventUseCase,
-            IGetEventByIdUseCase getEventByIdUseCase)
+            IGetEventByIdUseCase getEventByIdUseCase,
+            IGetEventByTitleUseCase getEventByTitleUseCase,
+            IGetEventsByDateUseCase getEventsByDateUseCase
+
+            )
         {
             _getAllEventsUseCase = getAllEventsUseCase;
             _createEventUseCase = createEventUseCase;
             _updateEventUseCase = updateEventUseCase;
             _deleteEventUseCase = deleteEventUseCase;
             _getEventByIdUseCase = getEventByIdUseCase;
+            _getEventByTitleUseCase = getEventByTitleUseCase;
+            _getEventsByDateUseCase = getEventsByDateUseCase;
+
         }
 
         [Authorize(Policy = ApiPolicies.UserClientRole)]
@@ -215,5 +225,70 @@ namespace EventManagementSystemAPI.Controllers
                 ));
             }
         }
+
+        [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
+        [HttpGet("title/{title}")]
+        public IActionResult GetEventByTitle(string title)
+        {
+            try
+            {
+                var eventsDto = _getEventByTitleUseCase.Execute(title);
+                if (eventsDto == null || !eventsDto.Any())
+                {
+                    return NotFound(new Response<string>(
+                        404,
+                        "No events found",
+                        null
+                    ));
+                }
+
+                return Ok(new Response<IEnumerable<EventDto>>(
+                    200,
+                    "Events retrieved successfully",
+                    eventsDto
+                ));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response<string>(
+                    500,
+                    ex.Message,
+                    null
+                ));
+            }
+        }
+
+        [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
+        [HttpGet("date/{date}")]
+        public IActionResult GetEventsByDate(DateTime date)
+        {
+            try
+            {
+                var eventsDto = _getEventsByDateUseCase.Execute(date);
+                if (eventsDto == null || !eventsDto.Any())
+                {
+                    return NotFound(new Response<string>(
+                        404,
+                        "No events found on the specified date",
+                        null
+                    ));
+                }
+
+                return Ok(new Response<IEnumerable<EventDto>>(
+                    200,
+                    "Events details retrieved successfully",
+                    eventsDto
+                ));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response<string>(
+                    500,
+                    ex.Message,
+                    null
+                ));
+            }
+        }
+
     }
 }

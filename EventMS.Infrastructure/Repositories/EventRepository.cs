@@ -68,5 +68,18 @@ namespace EventMS.Infrastructure.Repositories
         {
             return _context.Events.FirstOrDefault(e => e.Id == id);
         }
+
+        public IEnumerable<Event> GetEventByTitle(string title)
+        {
+            return _context.Events
+                .Where(e => e.Title.Contains(title))
+                .ToList();
+        }
+
+        public IEnumerable<Event> GetEventsByDate(DateTime date)
+        {
+            return _context.Events.Where(e => e.Date.Date == date.Date).ToList();
+        }
+
     }
 }
