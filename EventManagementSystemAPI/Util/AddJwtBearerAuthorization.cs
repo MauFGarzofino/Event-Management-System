@@ -20,6 +20,7 @@ namespace EventManagementSystemAPI.Util
                 {
                     o.Authority = configuration["Jwt:Authority"];
                     o.Audience = configuration["Jwt:Audience"];
+                    o.RequireHttpsMetadata = bool.Parse(configuration["Jwt:RequireHttpsMetadata"]);
 
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
@@ -70,7 +71,6 @@ namespace EventManagementSystemAPI.Util
                         }
                     };
 
-                    o.RequireHttpsMetadata = false;
                     o.SaveToken = true;
                 });
 
