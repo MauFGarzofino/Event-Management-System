@@ -16,7 +16,7 @@ namespace EventMS.Domain.Interfaces
         bool EventExists(string title, DateTime date, TimeSpan time, string location);
         Event GetEventById(int id);
         Event GetEventDetailsById(int id);
-        Event GetEventByTitle(string title);
+        IEnumerable<Event> GetEventByTitle(string title);
         IEnumerable<Event> GetEventsByDate(DateTime date);
 
     }

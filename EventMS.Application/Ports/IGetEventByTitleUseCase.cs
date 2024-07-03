@@ -11,6 +11,6 @@ namespace EventMS.Application.Ports
 {
     public interface IGetEventByTitleUseCase
     {
-        EventDto Execute(string title);
+        IEnumerable<EventDto> Execute(string title);
     }
 }

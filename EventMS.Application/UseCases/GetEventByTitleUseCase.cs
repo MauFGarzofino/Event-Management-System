@@ -23,10 +23,10 @@ namespace EventMS.Application.UseCases
             _mapper = mapper;
         }
 
-        public EventDto Execute(string title)
+        public IEnumerable<EventDto> Execute(string title)
         {
-            var eventEntity = _eventRepository.GetEventByTitle(title);
-            return eventEntity != null ? _mapper.Map<EventDto>(eventEntity) : null;
+            var eventEntities = _eventRepository.GetEventByTitle(title);
+            return eventEntities != null ? _mapper.Map<IEnumerable<EventDto>>(eventEntities) : Enumerable.Empty<EventDto>();
         }
     }
 }

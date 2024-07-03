@@ -232,20 +232,20 @@ namespace EventManagementSystemAPI.Controllers
         {
             try
             {
-                var eventDto = _getEventByTitleUseCase.Execute(title);
-                if (eventDto == null)
+                var eventsDto = _getEventByTitleUseCase.Execute(title);
+                if (eventsDto == null || !eventsDto.Any())
                 {
                     return NotFound(new Response<string>(
                         404,
-                        "Event not found",
+                        "No events found",
                         null
                     ));
                 }
 
-                return Ok(new Response<EventDto>(
+                return Ok(new Response<IEnumerable<EventDto>>(
                     200,
-                    "Event details retrieved successfully",
-                    eventDto
+                    "Events retrieved successfully",
+                    eventsDto
                 ));
             }
             catch (Exception ex)
