@@ -34,6 +34,8 @@ namespace EventManagementSystemAPI.MappingProfile
                 .ForMember(dest => dest.TypeName, opt => opt.MapFrom(src => src.TypeName));
 
             CreateMap<TypeTicketCount, TicketTypeCountDto>();
+            CreateMap<EventRegistrationDto, EventRegistration>();
         }
+
     }
 }
