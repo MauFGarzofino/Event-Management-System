@@ -51,10 +51,10 @@ namespace EventManagementSystemAPI.Tests
                 new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
             }, "mock"));
 
-            _mockPurchaseTicketUseCase.Setup(x => x.Execute(ticketTypeId, user, eventId)).ReturnsAsync((Ticket)null);
+            _mockPurchaseTicketUseCase.Setup(x => x.Execute(ticketTypeId, user)).ReturnsAsync((Ticket)null);
 
             // Act
-            var result = await _controller.PurchaseATicket(ticketTypeId, eventId);
+            var result = await _controller.PurchaseATicket(ticketTypeId);
 
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);

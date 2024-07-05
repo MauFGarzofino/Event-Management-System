@@ -14,5 +14,7 @@ namespace EventMS.Domain.Interfaces
         Task AddTypeTicketAsync(TypeTicket typeTicket);
         Task UpdateTypeTicketAsync(TypeTicket typeTicket);
         Task<IEnumerable<TypeTicketCount>> GetTicketTypeCountsAsync(int eventId);
+        Task DelteAllTypeTicketsFroAnEvent(int eventId);
+
     }
 }

@@ -13,10 +13,12 @@ namespace EventMS.Infrastructure.Repositories
     public class TypeTicketRepository : ITypeTicketRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly ITicketRepository _ticketRepository;
 
-        public TypeTicketRepository(ApplicationDbContext context)
+        public TypeTicketRepository(ApplicationDbContext context, ITicketRepository ticketRepository)
         {
             _context = context;
+            _ticketRepository = ticketRepository;
         }
 
         public IEnumerable<TypeTicket> GetAllTypeTickets()
@@ -52,6 +54,22 @@ namespace EventMS.Infrastructure.Repositories
                     Price = tt.Price,
                     QuantityAvailable = tt.QuantityAvailable
                 }).ToListAsync();
+        }
+
+        public async Task DelteAllTypeTicketsFroAnEvent(int eventId) 
+        {
+
+            var typeTickets = await _context.TypeTickets
+                                            .Where(tt => tt.EventId == eventId)
+                                            .ToListAsync();
+
+            foreach (var typeTicket in typeTickets)
+            {
+                await _ticketRepository.DeleteTicketsForTypeTickets(typeTicket.Id);
+            }
+
+            await _context.SaveChangesAsync();
+
         }
     }
 }

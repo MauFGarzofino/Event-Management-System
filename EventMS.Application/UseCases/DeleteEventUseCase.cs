@@ -22,9 +22,9 @@ namespace EventMS.Application.UseCases
             _eventRepository = eventRepository;
         }
 
-        public void Execute(int id)
+        public async Task<bool> Execute(int id)
         {
-            _eventRepository.DeleteEvent(id);
+            return await _eventRepository.DeleteEvent(id);
         }
     }
 }

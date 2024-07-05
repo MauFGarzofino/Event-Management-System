@@ -38,7 +38,12 @@ namespace EventMS.Infrastructure.Data
             builder.HasMany(e => e.TypeTickets)
                    .WithOne(tt => tt.Event)
                    .HasForeignKey(tt => tt.EventId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.Cascade); 
+
+            builder.HasMany(e => e.EventRegistrations)
+                   .WithOne(er => er.Event)
+                   .HasForeignKey(er => er.EventId)
+                   .OnDelete(DeleteBehavior.Cascade); 
         }
 
         private void ConfigureTicket(EntityTypeBuilder<Ticket> builder)
@@ -72,6 +77,7 @@ namespace EventMS.Infrastructure.Data
                    .OnDelete(DeleteBehavior.Restrict);
         }
 
+
         private void ConfigureTypeTicket(EntityTypeBuilder<TypeTicket> builder)
         {
             builder.HasKey(tt => tt.Id);
@@ -90,7 +96,7 @@ namespace EventMS.Infrastructure.Data
             builder.HasOne(tt => tt.Event)
                    .WithMany(e => e.TypeTickets)
                    .HasForeignKey(tt => tt.EventId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.Cascade); // Cambiado a Cascade
         }
 
         private void ConfigureEventRegistration(EntityTypeBuilder<EventRegistration> builder)

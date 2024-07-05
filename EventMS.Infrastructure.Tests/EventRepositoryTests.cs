@@ -1,4 +1,5 @@
 using EventMS.Domain.Entities;
+using EventMS.Domain.Interfaces;
 using EventMS.Infrastructure.Data;
 using EventMS.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ namespace EventMS.Infrastructure.Tests
     {
         private readonly ApplicationDbContext _context;
         private readonly EventRepository _eventRepository;
-
+        ITypeTicketRepository ticketRepository;
         public EventRepositoryTests()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -17,7 +18,7 @@ namespace EventMS.Infrastructure.Tests
                 .Options;
 
             _context = new ApplicationDbContext(options);
-            _eventRepository = new EventRepository(_context);
+            _eventRepository = new EventRepository(_context, ticketRepository);
         }
 
         [Fact]

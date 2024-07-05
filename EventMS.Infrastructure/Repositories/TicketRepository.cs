@@ -54,5 +54,19 @@ namespace EventMS.Infrastructure.Repositories
                 .Where(t => t.UserId == userId)
                 .ToListAsync();
         }
+
+        public async Task DeleteTicketsForTypeTickets(int typeTicketId)
+        {
+            var ticketsToDelete = await _context.Tickets
+                                               .Where(t => t.TypeTicketId == typeTicketId)
+                                               .ToListAsync();
+
+            if (ticketsToDelete.Any())
+            {
+                _context.Tickets.RemoveRange(ticketsToDelete);
+                await _context.SaveChangesAsync();
+            }
+
+        }
     }
 }

@@ -24,13 +24,13 @@ namespace EventMS.Application.UseCases.Ticket
             _mapper = mapper;
         }
 
-        public async Task<TypeTicket> ExecuteAsync(TypeTicketDto typeTicketDto)
+        public async Task<TypeTicket> ExecuteAsync(TypeTicketDto typeTicketDto, int eventId)
         {
-            var eventEntity = _eventRepository.GetEventById(typeTicketDto.EventId);
+            var eventEntity = _eventRepository.GetEventById(eventId);
 
             if (eventEntity == null)
             {
-                throw new KeyNotFoundException($"Event with id '{typeTicketDto.EventId}' not found.");
+                throw new KeyNotFoundException($"Event with id '{eventId}' not found.");
             }
 
             var typeTicket = _mapper.Map<TypeTicket>(typeTicketDto);

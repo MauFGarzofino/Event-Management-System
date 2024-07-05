@@ -31,7 +31,7 @@ namespace EventMS.Application.UseCases.Ticket
             _createUserUseCase = createUserUseCase;
         }
 
-        public async Task<EventMS.Domain.Entities.Ticket> Execute(int ticketId, ClaimsPrincipal user, int eventId)
+        public async Task<EventMS.Domain.Entities.Ticket> Execute(int ticketId, ClaimsPrincipal user)
         {
             var userCreated = await _createUserUseCase.Execute(user);
 
