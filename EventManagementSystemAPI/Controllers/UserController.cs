@@ -3,6 +3,8 @@ using EventMS.Application.DTOs;
 using EventMS.Application.DTOs.UsersDto;
 using EventMS.Application.Ports;
 using EventMS.Domain.Entities;
+using EventMS.Infrastructure.Auth.TokenManagement;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Swashbuckle.AspNetCore.Annotations;
@@ -24,6 +26,7 @@ namespace EventManagementSystemAPI.Controllers
             
         }
 
+        [Authorize(Policy = ApiPolicies.AdminClientRole)]
         [HttpGet]
         public IActionResult Get()
         {
@@ -37,6 +40,7 @@ namespace EventManagementSystemAPI.Controllers
             return Ok(new Response<IEnumerable<UserDto>>(200, "Users found successfully",users));
         }
 
+        [Authorize(Policy = ApiPolicies.AdminClientRole)]
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserById(string userId)
         {

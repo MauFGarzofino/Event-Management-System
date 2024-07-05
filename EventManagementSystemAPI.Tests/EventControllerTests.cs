@@ -237,18 +237,18 @@ namespace EventManagementSystemAPI.Tests
 
 
         [Fact]
-        public void Delete_ShouldReturnNoContent_WhenEventIsDeleted()
+        public async Task Delete_ShouldReturnOk_WhenEventIsDeleted()
         {
             // Arrange
             var eventId = 1;
-            _mockDeleteEventUseCase.Setup(x => x.Execute(eventId));
+            _mockDeleteEventUseCase.Setup(x => x.Execute(eventId)).ReturnsAsync(true);
 
             // Act
-            var result = _controller.Delete(eventId);
+            var result = await _controller.Delete(eventId);
 
             // Assert
-            var eventDelted = Assert.IsType<OkObjectResult>(result);
-            var response = Assert.IsType<Response<string>>(eventDelted.Value);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var response = Assert.IsType<Response<string>>(okResult.Value);
             Assert.Equal(200, response.Status);
             Assert.Equal("Event successfully removed", response.Message);
             Assert.Null(response.Errors);
@@ -256,19 +256,43 @@ namespace EventManagementSystemAPI.Tests
         }
 
         [Fact]
-        public void Delete_ShouldReturnNotFound_WhenEventDoesNotExist()
+        public async Task Delete_ShouldReturnBadRequest_WhenEventWasNotDeleted()
+        {
+            // Arrange
+            var eventId = 1;
+            _mockDeleteEventUseCase.Setup(x => x.Execute(eventId)).ReturnsAsync(false);
+
+            // Act
+            var result = await _controller.Delete(eventId);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            var response = Assert.IsType<Response<string>>(badRequestResult.Value);
+            Assert.Equal(400, response.Status);
+            Assert.Equal("Event was not removed", response.Message);
+            Assert.Null(response.Errors);
+            Assert.Null(response.Data);
+        }
+
+        [Fact]
+        public async Task Delete_ShouldReturnNotFound_WhenEventDoesNotExist()
         {
             // Arrange
             var eventId = 1;
             _mockDeleteEventUseCase.Setup(x => x.Execute(eventId)).Throws(new KeyNotFoundException());
 
             // Act
-            var result = _controller.Delete(eventId);
+            var result = await _controller.Delete(eventId);
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
-            Assert.Equal(404, notFoundResult.StatusCode);
+            var response = Assert.IsType<Response<string>>(notFoundResult.Value);
+            Assert.Equal(404, response.Status);
+            Assert.NotNull(response.Message); 
+            Assert.Null(response.Errors);
+            Assert.Null(response.Data);
         }
+
 
         [Fact]
         public void GetEventById_ShouldReturnOkResult_WhenEventExists()
