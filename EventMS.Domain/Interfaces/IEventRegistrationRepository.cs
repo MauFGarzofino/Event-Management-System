@@ -11,6 +11,8 @@ namespace EventMS.Domain.Interfaces
     public interface IEventRegistrationRepository
     {
         void AddEventRegistration(EventRegistration eventRegistration);
-        void DeleteEventRegistration(int registrationId);
+        void DeleteEventRegistration(string userId, int registrationId);
+
+        IEnumerable<EventRegistration> GetByUserId(string userId);
     }
 }

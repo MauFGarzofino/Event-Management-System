@@ -26,14 +26,19 @@ namespace EventMS.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public void DeleteEventRegistration(int registrationId)
+        public void DeleteEventRegistration(string userId, int registrationId)
         {
-            var registration = _context.EventRegistrations.Find(registrationId);
+            var registration = _context.EventRegistrations
+                .FirstOrDefault(er => er.UserId == userId && er.Id == registrationId);
             if (registration != null)
             {
                 _context.EventRegistrations.Remove(registration);
                 _context.SaveChanges();
             }
+        }
+        public IEnumerable<EventRegistration> GetByUserId(string userId)
+        {
+            return _context.EventRegistrations.Where(er => er.UserId == userId).ToList();
         }
     }
 }
