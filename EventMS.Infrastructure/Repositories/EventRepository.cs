@@ -63,7 +63,12 @@ namespace EventMS.Infrastructure.Repositories
 
             if (eventToDelete != null)
             {
-                await _ticketRepository.DelteAllTypeTicketsFroAnEvent(eventToDelete.Id); // Eliminar todos los TypeTicket primero
+                await _ticketRepository.DelteAllTypeTicketsFroAnEvent(eventToDelete.Id); 
+                var registrationsToDelete = await _context.EventRegistrations
+                    .Where(er => er.EventId == id)
+                    .ToListAsync();
+                await _context.SaveChangesAsync();
+
                 _context.Events.Remove(eventToDelete);
                 await _context.SaveChangesAsync();
             }
