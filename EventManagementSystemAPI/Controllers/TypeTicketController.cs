@@ -77,7 +77,7 @@ namespace EventManagementSystemAPI.Controllers
             }
         }
 
-        [Authorize(Policy = "OrganizerClientRole")]
+        [Authorize(Policy = ApiPolicies.UserClientRole)]
         [HttpGet("{eventId}/count")]
         public async Task<IActionResult> GetTicketTypeCounts(int eventId)
         {
