@@ -11,7 +11,7 @@ using EventMS.Application.Ports.Ticket;
 namespace EventManagementSystemAPI.Controllers
 {
     [ApiController]
-    [Route("typetickets")]
+    [Route("ticket-types")]
     [ValidateModel]
     public class TypeTicketController : ControllerBase
     {
@@ -27,8 +27,8 @@ namespace EventManagementSystemAPI.Controllers
         }
 
         [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] TypeTicketDto newTypeTicketDto)
+        [HttpPost("events/{eventId}/")]
+        public async Task<IActionResult> Post([FromBody] TypeTicketDto newTypeTicketDto, int eventId)
         {
             if (!ModelState.IsValid)
             {
@@ -44,7 +44,7 @@ namespace EventManagementSystemAPI.Controllers
 
             try
             {
-                var createdTypeTicket = await _createTypeTicketUseCase.ExecuteAsync(newTypeTicketDto);
+                var createdTypeTicket = await _createTypeTicketUseCase.ExecuteAsync(newTypeTicketDto, eventId);
                 return CreatedAtAction(nameof(Post), new { id = createdTypeTicket.Id }, new Response<TypeTicket>(
                     201,
                     "Type ticket created successfully.",
@@ -78,7 +78,7 @@ namespace EventManagementSystemAPI.Controllers
         }
 
         [Authorize(Policy = "OrganizerClientRole")]
-        [HttpGet("{eventId}/ticket-types/count")]
+        [HttpGet("{eventId}/count")]
         public async Task<IActionResult> GetTicketTypeCounts(int eventId)
         {
             var ticketTypeCounts = await _getTicketTypeCountsUseCase.ExecuteAsync(eventId);

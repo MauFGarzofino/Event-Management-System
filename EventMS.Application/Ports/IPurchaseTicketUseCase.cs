@@ -10,6 +10,6 @@ namespace EventMS.Application.Ports
 {
     public interface IPurchaseTicketUseCase
     {
-        Task<Domain.Entities.Ticket> Execute(int ticketTypeId, ClaimsPrincipal user, int eventId);
+        Task<Domain.Entities.Ticket> Execute(int ticketTypeId, ClaimsPrincipal user);
     }
 }

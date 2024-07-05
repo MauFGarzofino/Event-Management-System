@@ -177,12 +177,18 @@ namespace EventManagementSystemAPI.Controllers
 
         [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                _deleteEventUseCase.Execute(id);
-                return Ok(new Response<string>(200, "Event successfully removed", null));
+                if (await _deleteEventUseCase.Execute(id))
+                {
+
+                    return Ok(new Response<string>(200, "Event successfully removed", null));
+                }
+
+                return BadRequest(new Response<string>(400, "Event was not removed", null));
+
             }
             catch (KeyNotFoundException ex)
             {

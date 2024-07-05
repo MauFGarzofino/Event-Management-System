@@ -10,6 +10,6 @@ namespace EventMS.Application.Ports
 {
     public interface IDeleteEventUseCase
     {
-        void Execute(int id);
+        Task<bool> Execute(int id);
     }
 }

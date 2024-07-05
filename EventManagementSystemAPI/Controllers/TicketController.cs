@@ -29,14 +29,14 @@ namespace EventManagementSystemAPI.Controllers
         }
 
         [Authorize(Policy = ApiPolicies.UserClientRole)]
-        [HttpPost("events/{eventId}/tickets-type/{ticketTypeId}")]
-        public async Task<IActionResult> PurchaseATicket(int ticketTypeId, int eventId)
+        [HttpPost("events/tickets-type/{ticketTypeId}")]
+        public async Task<IActionResult> PurchaseATicket(int ticketTypeId)
         {
 
             try
             {
                                
-                var ticket = await _purchaseTicketUseCase.Execute(ticketTypeId, User, eventId);
+                var ticket = await _purchaseTicketUseCase.Execute(ticketTypeId, User);
 
                 if(ticket == null)
                 {
