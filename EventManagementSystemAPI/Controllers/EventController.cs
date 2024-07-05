@@ -183,7 +183,6 @@ namespace EventManagementSystemAPI.Controllers
             {
                 if (await _deleteEventUseCase.Execute(id))
                 {
-
                     return Ok(new Response<string>(200, "Event successfully removed", null));
                 }
 
@@ -200,7 +199,7 @@ namespace EventManagementSystemAPI.Controllers
             }
         }
 
-        [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
+        [Authorize(Policy = ApiPolicies.UserClientRole)]
         [HttpGet("{id}")]
         public IActionResult GetEventById(int id)
         {
@@ -232,7 +231,7 @@ namespace EventManagementSystemAPI.Controllers
             }
         }
 
-        [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
+        [Authorize(Policy = ApiPolicies.UserClientRole)]
         [HttpGet("title/{title}")]
         public IActionResult GetEventByTitle(string title)
         {
@@ -264,7 +263,7 @@ namespace EventManagementSystemAPI.Controllers
             }
         }
 
-        [Authorize(Policy = ApiPolicies.OrganizerClientRole)]
+        [Authorize(Policy = ApiPolicies.UserClientRole)]
         [HttpGet("date/{date}")]
         public IActionResult GetEventsByDate(DateTime date)
         {

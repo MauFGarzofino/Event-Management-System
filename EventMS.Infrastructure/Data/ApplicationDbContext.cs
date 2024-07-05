@@ -26,21 +26,6 @@ namespace EventMS.Infrastructure.Data
                  .HasKey(e => e.Id);
         }
 
-        //private void ConfigureEvent(EntityTypeBuilder<Event> builder)
-        //{
-        //    builder.HasKey(e => e.Id);
-        //    builder.Property(e => e.Title).IsRequired();
-        //    builder.Property(e => e.Description).HasMaxLength(500);
-        //    builder.Property(e => e.Date).IsRequired();
-        //    builder.Property(e => e.Time).IsRequired();
-        //    builder.Property(e => e.Location).IsRequired();
-
-        //    builder.HasMany(e => e.TypeTickets)
-        //           .WithOne(tt => tt.Event)
-        //           .HasForeignKey(tt => tt.EventId)
-        //           .OnDelete(DeleteBehavior.Restrict);
-        //}
-
         private void ConfigureEvent(EntityTypeBuilder<Event> builder)
         {
             builder.HasKey(e => e.Id);
@@ -53,12 +38,12 @@ namespace EventMS.Infrastructure.Data
             builder.HasMany(e => e.TypeTickets)
                    .WithOne(tt => tt.Event)
                    .HasForeignKey(tt => tt.EventId)
-                   .OnDelete(DeleteBehavior.Cascade); // Cambiado a Cascade
+                   .OnDelete(DeleteBehavior.Cascade); 
 
-            builder.HasMany(e => e.EventRegistrations)  // Agrega esta parte para configurar la relación con EventRegistrations
+            builder.HasMany(e => e.EventRegistrations)
                    .WithOne(er => er.Event)
                    .HasForeignKey(er => er.EventId)
-                   .OnDelete(DeleteBehavior.Cascade); // Cambiado a Cascade
+                   .OnDelete(DeleteBehavior.Cascade); 
         }
 
         private void ConfigureTicket(EntityTypeBuilder<Ticket> builder)
@@ -91,27 +76,6 @@ namespace EventMS.Infrastructure.Data
                    .HasForeignKey(t => t.UserId)
                    .OnDelete(DeleteBehavior.Restrict);
         }
-
-        //private void ConfigureTypeTicket(EntityTypeBuilder<TypeTicket> builder)
-        //{
-        //    builder.HasKey(tt => tt.Id);
-        //    builder.Property(tt => tt.Name).IsRequired();
-        //    builder.Property(tt => tt.Description).IsRequired();
-        //    builder.Property(tt => tt.Price)
-        //           .IsRequired()
-        //           .HasColumnType("decimal(18,2)");
-        //    builder.Property(tt => tt.QuantityAvailable).IsRequired();
-
-        //    builder.HasMany(tt => tt.Tickets)
-        //           .WithOne(t => t.TypeTicket)
-        //           .HasForeignKey(t => t.TypeTicketId)
-        //           .OnDelete(DeleteBehavior.Restrict);
-
-        //    builder.HasOne(tt => tt.Event)
-        //           .WithMany(e => e.TypeTickets)
-        //           .HasForeignKey(tt => tt.EventId)
-        //           .OnDelete(DeleteBehavior.Restrict);
-        //}
 
 
         private void ConfigureTypeTicket(EntityTypeBuilder<TypeTicket> builder)

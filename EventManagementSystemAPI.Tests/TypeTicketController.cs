@@ -4,6 +4,7 @@ using EventMS.Application.DTOs.Tickets;
 using EventMS.Application.Ports.Ticket;
 using EventMS.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -30,12 +31,13 @@ namespace EventManagementSystemAPI.Tests
         public async Task Post_ReturnsCreated_WhenTypeTicketCreatedSuccessfully()
         {
             // Arrange
-            var newTypeTicketDto = new TypeTicketDto { Name = "VIP", Description = "VIP Ticket", Price = 100, QuantityAvailable = 50, EventId = 1 };
+            int eventId = 1;
+            var newTypeTicketDto = new TypeTicketDto { Name = "VIP", Description = "VIP Ticket", Price = 100, QuantityAvailable = 50};
             var createdTypeTicket = new TypeTicket { Id = 1, Name = "VIP", Description = "VIP Ticket", Price = 100, QuantityAvailable = 50, EventId = 1 };
-            _mockCreateTypeTicketUseCase.Setup(x => x.ExecuteAsync(newTypeTicketDto)).ReturnsAsync(createdTypeTicket);
+            _mockCreateTypeTicketUseCase.Setup(x => x.ExecuteAsync(newTypeTicketDto, eventId)).ReturnsAsync(createdTypeTicket);
 
             // Act
-            var result = await _controller.Post(newTypeTicketDto);
+            var result = await _controller.Post(newTypeTicketDto, eventId);
 
             // Assert
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
@@ -49,11 +51,12 @@ namespace EventManagementSystemAPI.Tests
         public async Task Post_ReturnsNotFound_WhenKeyNotFoundExceptionIsThrown()
         {
             // Arrange
-            var newTypeTicketDto = new TypeTicketDto { Name = "VIP", Description = "VIP Ticket", Price = 100, QuantityAvailable = 50, EventId = 1 };
-            _mockCreateTypeTicketUseCase.Setup(x => x.ExecuteAsync(newTypeTicketDto)).ThrowsAsync(new KeyNotFoundException("Event not found"));
+            int eventId = 1;
+            var newTypeTicketDto = new TypeTicketDto { Name = "VIP", Description = "VIP Ticket", Price = 100, QuantityAvailable = 50 };
+            _mockCreateTypeTicketUseCase.Setup(x => x.ExecuteAsync(newTypeTicketDto, eventId)).ThrowsAsync(new KeyNotFoundException("Event not found"));
 
             // Act
-            var result = await _controller.Post(newTypeTicketDto);
+            var result = await _controller.Post(newTypeTicketDto, eventId);
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -66,11 +69,12 @@ namespace EventManagementSystemAPI.Tests
         public async Task Post_ReturnsBadRequest_WhenArgumentExceptionIsThrown()
         {
             // Arrange
-            var newTypeTicketDto = new TypeTicketDto { Name = "VIP", Description = "VIP Ticket", Price = 100, QuantityAvailable = 50, EventId = 1 };
-            _mockCreateTypeTicketUseCase.Setup(x => x.ExecuteAsync(newTypeTicketDto)).ThrowsAsync(new ArgumentException("Invalid argument"));
+            int eventId = 1;
+            var newTypeTicketDto = new TypeTicketDto { Name = "VIP", Description = "VIP Ticket", Price = 100, QuantityAvailable = 50 };
+            _mockCreateTypeTicketUseCase.Setup(x => x.ExecuteAsync(newTypeTicketDto, eventId)).ThrowsAsync(new ArgumentException("Invalid argument"));
 
             // Act
-            var result = await _controller.Post(newTypeTicketDto);
+            var result = await _controller.Post(newTypeTicketDto, eventId);
 
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
@@ -83,11 +87,12 @@ namespace EventManagementSystemAPI.Tests
         public async Task Post_ReturnsConflict_WhenInvalidOperationExceptionIsThrown()
         {
             // Arrange
-            var newTypeTicketDto = new TypeTicketDto { Name = "VIP", Description = "VIP Ticket", Price = 100, QuantityAvailable = 50, EventId = 1 };
-            _mockCreateTypeTicketUseCase.Setup(x => x.ExecuteAsync(newTypeTicketDto)).ThrowsAsync(new InvalidOperationException("Operation invalid"));
+            int eventId = 1;
+            var newTypeTicketDto = new TypeTicketDto { Name = "VIP", Description = "VIP Ticket", Price = 100, QuantityAvailable = 50 };
+            _mockCreateTypeTicketUseCase.Setup(x => x.ExecuteAsync(newTypeTicketDto, eventId)).ThrowsAsync(new InvalidOperationException("Operation invalid"));
 
             // Act
-            var result = await _controller.Post(newTypeTicketDto);
+            var result = await _controller.Post(newTypeTicketDto, eventId);
 
             // Assert
             var conflictResult = Assert.IsType<ConflictObjectResult>(result);
