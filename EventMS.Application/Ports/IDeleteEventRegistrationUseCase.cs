@@ -8,6 +8,8 @@ namespace EventMS.Application.Ports
 {
     public interface IDeleteEventRegistrationUseCase
     {
-        void Execute(int registrationId);
+
+        void Execute(string userId, int registrationId);
     }
+
 }

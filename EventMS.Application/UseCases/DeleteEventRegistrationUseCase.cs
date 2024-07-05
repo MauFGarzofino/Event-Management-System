@@ -17,9 +17,10 @@ namespace EventMS.Application.UseCases
             _eventRegistrationRepository = eventRegistrationRepository;
         }
 
-        public void Execute(int registrationId)
+
+        public void Execute(string userId, int registrationId)
         {
-            _eventRegistrationRepository.DeleteEventRegistration(registrationId);
+            _eventRegistrationRepository.DeleteEventRegistration(userId, registrationId);
         }
     }
 }
