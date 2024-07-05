@@ -18,13 +18,16 @@ namespace EventManagementSystemAPI.Controllers
     {
         private readonly ICreateEventRegistrationUseCase _createEventRegistrationUseCase;
         private readonly IDeleteEventRegistrationUseCase _deleteEventRegistrationUseCase;
+        private readonly IGetEventRegistrationsByUserUseCase _getEventRegistrationsByUserUseCase;
 
         public EventRegistrationController(
             ICreateEventRegistrationUseCase createEventRegistrationUseCase,
-            IDeleteEventRegistrationUseCase deleteEventRegistrationUseCase)
+            IDeleteEventRegistrationUseCase deleteEventRegistrationUseCase,
+            IGetEventRegistrationsByUserUseCase getEventRegistrationsByUserUseCase)
         {
             _createEventRegistrationUseCase = createEventRegistrationUseCase;
             _deleteEventRegistrationUseCase = deleteEventRegistrationUseCase;
+            _getEventRegistrationsByUserUseCase = getEventRegistrationsByUserUseCase;
         }
 
         [HttpPost]
@@ -54,12 +57,13 @@ namespace EventManagementSystemAPI.Controllers
                 });
             }
         }
-        /*[HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+
+        [HttpDelete("{userId}/{registrationId}")]
+        public IActionResult Delete(string userId, int registrationId)
         {
             try
             {
-                _deleteEventRegistrationUseCase.Execute(id);
+                _deleteEventRegistrationUseCase.Execute(userId, registrationId);
                 return NoContent();
             }
             catch (Exception ex)
@@ -70,6 +74,29 @@ namespace EventManagementSystemAPI.Controllers
                     message = ex.Message
                 });
             }
-        }*/
+        }
+
+        [HttpGet("user/{userId}")]
+        public IActionResult GetByUserId(string userId)
+        {
+            try
+            {
+                var registrations = _getEventRegistrationsByUserUseCase.Execute(userId);
+                return Ok(new
+                {
+                    status = 200,
+                    message = "Event registrations retrieved successfully.",
+                    data = registrations
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    status = 500,
+                    message = ex.Message
+                });
+            }
+        }
     }
 }
